@@ -1,3 +1,19 @@
+package com.example.demo.service;
+
+import com.example.demo.dto.TaskDTO;
+import com.example.demo.dto.TaskUpdateDTO;
+import com.example.demo.entity.Project;
+import com.example.demo.entity.Task;
+import com.example.demo.entity.User;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.BusinessException;
+import com.example.demo.mapper.TaskMapper;
+import com.example.demo.repository.ProjectRepository;
+import com.example.demo.repository.TaskRepository;
+import com.example.demo.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 @Service
 public class TaskService {
     
@@ -19,7 +35,7 @@ public class TaskService {
     public TaskDTO updateTask(Long taskId, TaskUpdateDTO updateDTO) {
         // 1. Get existing task from database
         Task existingTask = taskRepository.findById(taskId)
-            .orElseThrow(() -> new RuntimeException("Task not found"));
+            .orElseThrow(() -> ResourceNotFoundException.task(taskId));
         
         // 2. Use mapper to update simple fields (title, description, status, priority, dueDate)
         // Only non-null fields from updateDTO will be applied due to IGNORE strategy
@@ -28,15 +44,19 @@ public class TaskService {
         // 3. Handle relationship updates separately with business logic validation
         if (updateDTO.getProjectId() != null) {
             Project newProject = projectRepository.findById(updateDTO.getProjectId())
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> ResourceNotFoundException.project(updateDTO.getProjectId()));
+            
             // Add business validation here (e.g., user has permission to assign to this project)
+            validateProjectAssignment(existingTask, newProject);
             existingTask.setProject(newProject);
         }
         
         if (updateDTO.getAssigneeId() != null) {
             User newAssignee = userRepository.findById(updateDTO.getAssigneeId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> ResourceNotFoundException.user(updateDTO.getAssigneeId()));
+            
             // Add business validation here (e.g., user has required role)
+            validateUserAssignment(existingTask, newAssignee);
             existingTask.setAssignee(newAssignee);
         }
         
@@ -45,6 +65,26 @@ public class TaskService {
         
         // 5. Convert back to DTO for response
         return taskMapper.toDTO(savedTask);
+    }
+    
+    /**
+     * Validate business rules for project assignment
+     */
+    private void validateProjectAssignment(Task task, Project project) {
+        // Example business validation
+        if (project.getName() == null || project.getName().trim().isEmpty()) {
+            throw new BusinessException("Cannot assign task to a project without a name");
+        }
+    }
+    
+    /**
+     * Validate business rules for user assignment
+     */
+    private void validateUserAssignment(Task task, User user) {
+        // Example business validation
+        if (user.getRole() == null) {
+            throw new BusinessException("Cannot assign task to user without a role");
+        }
     }
     
     /**

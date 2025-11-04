@@ -18,10 +18,41 @@ spring:
         format_sql: true
     open-in-view: false
   
-  server:
-    port: 8080
+  # Web configuration
+  web:
+    resources:
+      add-mappings: false
 
+server:
+  port: 8080
+  error:
+    # Disable default error page
+    whitelabel:
+      enabled: false
+    # Include error details in response (be careful in production)
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: on_param
+    include-exception: false
+
+# Logging configuration
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    root: INFO
+    "[com.example.demo]": DEBUG
+    "[org.hibernate.SQL]": DEBUG
+    "[org.hibernate.type.descriptor.sql.BasicBinder]": TRACE
+    "[REQUEST_LOGGER]": INFO
+  
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  
+  file:
+    name: logs/demo-app.log
+  
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      total-size-cap: 100MB
+      max-history: 30
