@@ -1,9 +1,8 @@
 package com.example.demo.entity;
 
 public enum TaskStatus {
-    TODO,
+    PENDING,
     IN_PROGRESS,
-    IN_REVIEW,
-    DONE,
+    COMPLETED,
     CANCELLED
 }
