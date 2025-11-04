@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.*;
+import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.service.CommentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,56 +23,61 @@ public class CommentController {
      * This endpoint demonstrates toEntity() usage
      */
     @PostMapping
-    public ResponseEntity<CommentDTO> createComment(@Valid @RequestBody CommentCreateDTO commentCreateDTO) {
+    public ResponseEntity<ApiResponse<CommentDTO>> createComment(@Valid @RequestBody CommentCreateDTO commentCreateDTO) {
         CommentDTO createdComment = commentService.createComment(commentCreateDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
+        ApiResponse<CommentDTO> response = ApiResponse.success(createdComment, "Comment created successfully");
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     
     /**
      * GET /api/comments/{id} - Get comment by ID
      */
     @GetMapping("/{id}")
-    public ResponseEntity<CommentDTO> getCommentById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<CommentDTO>> getCommentById(@PathVariable Long id) {
         CommentDTO comment = commentService.getCommentById(id);
-        return ResponseEntity.ok(comment);
+        ApiResponse<CommentDTO> response = ApiResponse.success(comment);
+        return ResponseEntity.ok(response);
     }
     
     /**
      * GET /api/comments/task/{taskId} - Get all comments for a task
      */
     @GetMapping("/task/{taskId}")
-    public ResponseEntity<List<CommentDTO>> getCommentsByTaskId(@PathVariable Long taskId) {
+    public ResponseEntity<ApiResponse<List<CommentDTO>>> getCommentsByTaskId(@PathVariable Long taskId) {
         List<CommentDTO> comments = commentService.getCommentsByTaskId(taskId);
-        return ResponseEntity.ok(comments);
+        ApiResponse<List<CommentDTO>> response = ApiResponse.success(comments, "Retrieved comments for task");
+        return ResponseEntity.ok(response);
     }
     
     /**
      * GET /api/comments/user/{userId} - Get all comments by a user
      */
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<CommentDTO>> getCommentsByUserId(@PathVariable Long userId) {
+    public ResponseEntity<ApiResponse<List<CommentDTO>>> getCommentsByUserId(@PathVariable Long userId) {
         List<CommentDTO> comments = commentService.getCommentsByUserId(userId);
-        return ResponseEntity.ok(comments);
+        ApiResponse<List<CommentDTO>> response = ApiResponse.success(comments, "Retrieved comments by user");
+        return ResponseEntity.ok(response);
     }
     
     /**
      * PATCH /api/comments/{id} - Update comment content
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<CommentDTO> updateComment(
+    public ResponseEntity<ApiResponse<CommentDTO>> updateComment(
             @PathVariable Long id, 
             @RequestBody String newContent) {
-        
         CommentDTO updatedComment = commentService.updateComment(id, newContent);
-        return ResponseEntity.ok(updatedComment);
+        ApiResponse<CommentDTO> response = ApiResponse.success(updatedComment, "Comment updated successfully");
+        return ResponseEntity.ok(response);
     }
     
     /**
      * DELETE /api/comments/{id} - Delete comment
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable Long id) {
         commentService.deleteComment(id);
-        return ResponseEntity.noContent().build();
+        ApiResponse<Void> response = ApiResponse.success("Comment deleted successfully");
+        return ResponseEntity.ok(response);
     }
 }
