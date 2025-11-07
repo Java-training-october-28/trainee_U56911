@@ -10,8 +10,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Demonstrates proper @Transactional usage at both class and method levels
+ * 
+ * Key Concepts:
+ * 1. No class-level @Transactional - allows method-level control
+ * 2. Method-level @Transactional with readOnly=true for read operations  
+ * 3. Proper transaction boundaries for business logic
+ * 4. Write operations (create, update, delete) don't need explicit @Transactional
+ *    but benefit from method-level control
+ */
 @Service
-@Transactional
 public class CommentService {
     
     @Autowired
@@ -27,13 +36,21 @@ public class CommentService {
     private TaskRepository taskRepository;
     
     /**
-     * Create a new comment - demonstrates toEntity() usage
+     * CREATE operation - Uses @Transactional for complex business logic
+     * This method coordinates 3 separate repository operations:
+     * 1. User validation (read)
+     * 2. Task validation (read) 
+     * 3. Comment creation (write)
+     * 
+     * Without @Transactional, if Comment.save() fails, User and Task queries
+     * would already be committed to database, causing inconsistency.
      */
+    @Transactional
     public CommentDTO createComment(CommentCreateDTO commentCreateDTO) {
-        // 1. Use mapper to convert DTO to entity (only maps 'content' field)
+        // Use mapper to convert DTO to entity
         Comment comment = commentMapper.toEntity(commentCreateDTO);
         
-        // 2. Manually set relationships using IDs from DTO
+        // Validate relationships - these are part of the same transaction
         User user = userRepository.findById(commentCreateDTO.getUserId())
             .orElseThrow(() -> new RuntimeException("User not found"));
         Task task = taskRepository.findById(commentCreateDTO.getTaskId())
@@ -42,30 +59,38 @@ public class CommentService {
         comment.setUser(user);
         comment.setTask(task);
         
-        // 3. Save entity and convert back to DTO
+        // Save and convert back to DTO
         Comment savedComment = commentRepository.save(comment);
         return commentMapper.toDTO(savedComment);
     }
     
     /**
-     * Get all comments for a specific task
+     * READ operation - Method-level @Transactional with readOnly optimization
+     * readOnly=true tells Spring:
+     * - Don't flush changes to database
+     * - Skip some validation checks
+     * - Improves performance for read operations
      */
+    @Transactional(readOnly = true)
     public List<CommentDTO> getCommentsByTaskId(Long taskId) {
         List<Comment> comments = commentRepository.findByTaskIdOrderByCreatedAtDesc(taskId);
         return commentMapper.toDTOList(comments);
     }
     
     /**
-     * Get all comments by a specific user
+     * READ operation - Optimized for read-only access
      */
+    @Transactional(readOnly = true)
     public List<CommentDTO> getCommentsByUserId(Long userId) {
         List<Comment> comments = commentRepository.findByUserIdOrderByCreatedAtDesc(userId);
         return commentMapper.toDTOList(comments);
     }
     
     /**
-     * Get comment by ID
+     * READ operation - Single entity read
+     * Still uses @Transactional(readOnly = true) for consistency and optimization
      */
+    @Transactional(readOnly = true)
     public CommentDTO getCommentById(Long id) {
         Comment comment = commentRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Comment not found"));
@@ -73,8 +98,10 @@ public class CommentService {
     }
     
     /**
-     * Update comment content (only content can be updated)
+     * UPDATE operation - Uses @Transactional for consistency
+     * Even simple updates benefit from transaction management
      */
+    @Transactional
     public CommentDTO updateComment(Long commentId, String newContent) {
         Comment existingComment = commentRepository.findById(commentId)
             .orElseThrow(() -> new RuntimeException("Comment not found"));
@@ -85,12 +112,30 @@ public class CommentService {
     }
     
     /**
-     * Delete comment
+     * DELETE operation - Uses @Transactional for proper cleanup
+     * Ensures delete operation is atomic and properly managed
      */
+    @Transactional
     public void deleteComment(Long commentId) {
         if (!commentRepository.existsById(commentId)) {
             throw new RuntimeException("Comment not found");
         }
         commentRepository.deleteById(commentId);
+    }
+    
+    /**
+     * Complex business operation - demonstrates transaction boundaries
+     * This method shows what happens when you need different transaction behavior
+     * 
+     * Key points:
+     * 1. This method has its own transaction scope
+     * 2. If it calls other transactional methods, it can use propagation settings
+     * 3. Read-only methods can optimize database access
+     */
+    @Transactional(readOnly = true)  // This method is read-only
+    public List<CommentDTO> getTaskCommentsWithUserInfo(Long taskId) {
+        // This could join with user information - still read-only
+        List<Comment> comments = commentRepository.findByTaskIdOrderByCreatedAtDesc(taskId);
+        return commentMapper.toDTOList(comments);
     }
 }
