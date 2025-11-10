@@ -10,6 +10,41 @@ import java.util.List;
 
 @Entity
 @Table(name = "tasks")
+@NamedEntityGraphs({
+    @NamedEntityGraph(
+        name = "Task.withProject",
+        attributeNodes = {
+            @NamedAttributeNode("project")
+        }
+    ),
+    @NamedEntityGraph(
+        name = "Task.withAssignee",
+        attributeNodes = {
+            @NamedAttributeNode("assignee")
+        }
+    ),
+    @NamedEntityGraph(
+        name = "Task.withProjectAndAssignee",
+        attributeNodes = {
+            @NamedAttributeNode("project"),
+            @NamedAttributeNode("assignee")
+        }
+    ),
+    @NamedEntityGraph(
+        name = "Task.withComments",
+        attributeNodes = {
+            @NamedAttributeNode("comments")
+        }
+    ),
+    @NamedEntityGraph(
+        name = "Task.withAllRelations",
+        attributeNodes = {
+            @NamedAttributeNode("project"),
+            @NamedAttributeNode("assignee"),
+            @NamedAttributeNode("comments")
+        }
+    )
+})
 public class Task {
     
     @Id

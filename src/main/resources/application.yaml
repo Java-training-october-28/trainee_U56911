@@ -16,7 +16,25 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        # JPA optimization properties
+        jdbc.batch_size: 50
+        order_inserts: true
+        order_updates: true
+        jdbc.batch_versioned_data: true
+        # Query optimization
+        query.in_clause_parameter_padding: true
+        # Second-level cache configuration
+        cache.use_second_level_cache: true
+        cache.use_query_cache: true
+        cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+        generate_statistics: true
     open-in-view: false
+  
+  # Cache configuration
+  cache:
+    type: jcache
+    jcache:
+      provider: org.ehcache.jsr107.EhcacheCachingProvider
   
   # Web configuration
   web:

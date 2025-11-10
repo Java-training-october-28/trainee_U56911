@@ -10,6 +10,36 @@ import java.util.List;
 
 @Entity
 @Table(name = "projects")
+@NamedEntityGraphs({
+    @NamedEntityGraph(
+        name = "Project.withOwner",
+        attributeNodes = {
+            @NamedAttributeNode("owner")
+        }
+    ),
+    @NamedEntityGraph(
+        name = "Project.withOwnerAndTasks",
+        attributeNodes = {
+            @NamedAttributeNode("owner"),
+            @NamedAttributeNode("tasks")
+        }
+    ),
+    @NamedEntityGraph(
+        name = "Project.withTasksAndComments",
+        attributeNodes = {
+            @NamedAttributeNode("tasks"),
+            @NamedAttributeNode(value = "tasks", subgraph = "taskComments")
+        },
+        subgraphs = {
+            @NamedSubgraph(
+                name = "taskComments",
+                attributeNodes = {
+                    @NamedAttributeNode("comments")
+                }
+            )
+        }
+    )
+})
 public class Project {
     
     @Id
