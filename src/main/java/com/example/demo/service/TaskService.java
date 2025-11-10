@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.TaskDTO;
+import com.example.demo.dto.TaskCreateDTO;
 import com.example.demo.dto.TaskUpdateDTO;
+import com.example.demo.entity.TaskStatus;
 import com.example.demo.entity.Project;
 import com.example.demo.entity.Task;
 import com.example.demo.entity.User;
@@ -17,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class TaskService {
+public class TaskService implements TaskServiceInterface {
     
     @Autowired
     private TaskMapper taskMapper;
@@ -67,6 +69,50 @@ public class TaskService {
         
         // 5. Convert back to DTO for response
         return taskMapper.toDTO(savedTask);
+    }
+
+    @Override
+    public TaskDTO createTask(TaskCreateDTO createDTO) {
+        Task task = taskMapper.toEntity(createDTO);
+
+        // set project
+        Project project = projectRepository.findById(createDTO.getProjectId())
+            .orElseThrow(() -> ResourceNotFoundException.project(createDTO.getProjectId()));
+        task.setProject(project);
+
+        // set assignee if present
+        if (createDTO.getAssigneeId() != null) {
+            User assignee = userRepository.findById(createDTO.getAssigneeId())
+                .orElseThrow(() -> ResourceNotFoundException.user(createDTO.getAssigneeId()));
+            task.setAssignee(assignee);
+        }
+
+        Task saved = taskRepository.save(task);
+        return taskMapper.toDTO(saved);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TaskDTO getTaskById(Long id) {
+        Task task = taskRepository.findById(id)
+            .orElseThrow(() -> ResourceNotFoundException.task(id));
+        return taskMapper.toDTO(task);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public java.util.List<TaskDTO> getTasksByProject(Long projectId) {
+        java.util.List<Task> tasks = taskRepository.findByProjectId(projectId);
+        return taskMapper.toDTOList(tasks);
+    }
+
+    @Override
+    public TaskDTO updateTaskStatus(Long id, TaskStatus status) {
+        Task task = taskRepository.findById(id)
+            .orElseThrow(() -> ResourceNotFoundException.task(id));
+        task.setStatus(status);
+        Task saved = taskRepository.save(task);
+        return taskMapper.toDTO(saved);
     }
     
     /**

@@ -9,10 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import com.example.demo.exception.ResourceNotFoundException;
 
 @Service
 @Transactional
-public class ProjectService {
+public class ProjectService implements ProjectServiceInterface {
     
     @Autowired
     private ProjectMapper projectMapper;
@@ -29,7 +30,7 @@ public class ProjectService {
     public ProjectDTO updateProject(Long projectId, ProjectUpdateDTO updateDTO) {
         // 1. Get existing project from database
         Project existingProject = projectRepository.findById(projectId)
-            .orElseThrow(() -> new RuntimeException("Project not found"));
+            .orElseThrow(() -> ResourceNotFoundException.project(projectId));
         
         // 2. Use mapper to update simple fields (name, description, startDate, endDate, status)
         // Only non-null fields from updateDTO will be applied due to IGNORE strategy
@@ -38,7 +39,7 @@ public class ProjectService {
         // 3. Handle owner relationship update separately with business logic validation
         if (updateDTO.getOwnerId() != null) {
             User newOwner = userRepository.findById(updateDTO.getOwnerId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> ResourceNotFoundException.user(updateDTO.getOwnerId()));
             
             // Add business validation here (e.g., user has permission to own projects)
             // Check if current user has permission to transfer ownership
@@ -61,38 +62,57 @@ public class ProjectService {
         
         // Set owner relationship using ownerId from DTO
         User owner = userRepository.findById(createDTO.getOwnerId())
-            .orElseThrow(() -> new RuntimeException("Owner not found"));
+            .orElseThrow(() -> ResourceNotFoundException.user(createDTO.getOwnerId()));
         project.setOwner(owner);
         
         // Save and return DTO
         Project savedProject = projectRepository.save(project);
         return projectMapper.toDTO(savedProject);
     }
+
+    /**
+     * Create project with explicit ownerId parameter (interface compatibility).
+     */
+    @Override
+    public ProjectDTO createProject(ProjectCreateDTO createDTO, Long ownerId) {
+        if (createDTO == null) throw new IllegalArgumentException("createDTO cannot be null");
+        // ensure ownerId is set on DTO
+        createDTO.setOwnerId(ownerId);
+        return createProject(createDTO);
+    }
     
     /**
      * Get project by ID
      */
+    @Transactional(readOnly = true)
     public ProjectDTO getProjectById(Long id) {
         Project project = projectRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Project not found"));
+            .orElseThrow(() -> ResourceNotFoundException.project(id));
         return projectMapper.toDTO(project);
     }
     
     /**
      * Get project with tasks
      */
+    @Transactional(readOnly = true)
     public ProjectDTO getProjectWithTasks(Long id) {
         Project project = projectRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Project not found"));
+            .orElseThrow(() -> ResourceNotFoundException.project(id));
         return projectMapper.toDTOWithTasks(project);
     }
     
     /**
      * Get all projects for a specific owner
      */
+    @Transactional(readOnly = true)
     public List<ProjectDTO> getProjectsByOwnerId(Long ownerId) {
         List<Project> projects = projectRepository.findByOwnerId(ownerId);
         return projectMapper.toDTOList(projects);
+    }
+
+    @Override
+    public List<ProjectDTO> getProjectsByOwner(Long ownerId) {
+        return getProjectsByOwnerId(ownerId);
     }
     
     /**
@@ -100,7 +120,7 @@ public class ProjectService {
      */
     public void deleteProject(Long projectId) {
         if (!projectRepository.existsById(projectId)) {
-            throw new RuntimeException("Project not found");
+            throw ResourceNotFoundException.project(projectId);
         }
         projectRepository.deleteById(projectId);
     }
