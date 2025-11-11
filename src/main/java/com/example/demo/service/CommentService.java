@@ -71,6 +71,7 @@ public class CommentService {
      * - Skip some validation checks
      * - Improves performance for read operations
      */
+    @Cacheable(value = "comments", key = "'task_' + #taskId")
     @Transactional(readOnly = true)
     public List<CommentDTO> getCommentsByTaskId(Long taskId) {
         List<Comment> comments = commentRepository.findByTaskIdOrderByCreatedAtDesc(taskId);
@@ -80,6 +81,7 @@ public class CommentService {
     /**
      * READ operation - Optimized for read-only access
      */
+    @Cacheable(value = "comments", key = "'user_' + #userId")
     @Transactional(readOnly = true)
     public List<CommentDTO> getCommentsByUserId(Long userId) {
         List<Comment> comments = commentRepository.findByUserIdOrderByCreatedAtDesc(userId);
@@ -90,6 +92,8 @@ public class CommentService {
      * READ operation - Single entity read
      * Still uses @Transactional(readOnly = true) for consistency and optimization
      */
+   
+    @Cacheable(value = "comments", key = "#id")                 
     @Transactional(readOnly = true)
     public CommentDTO getCommentById(Long id) {
         Comment comment = commentRepository.findById(id)
@@ -101,6 +105,7 @@ public class CommentService {
      * UPDATE operation - Uses @Transactional for consistency
      * Even simple updates benefit from transaction management
      */
+     @CachePut(value = "comments", key = "#commentId")
     @Transactional
     public CommentDTO updateComment(Long commentId, String newContent) {
         Comment existingComment = commentRepository.findById(commentId)
@@ -115,6 +120,7 @@ public class CommentService {
      * DELETE operation - Uses @Transactional for proper cleanup
      * Ensures delete operation is atomic and properly managed
      */
+      @CacheEvict(value = "comments", key = "#commentId")
     @Transactional
     public void deleteComment(Long commentId) {
         if (!commentRepository.existsById(commentId)) {
@@ -132,6 +138,7 @@ public class CommentService {
      * 2. If it calls other transactional methods, it can use propagation settings
      * 3. Read-only methods can optimize database access
      */
+    @Cacheable(value = "comments", key = "'task_user_info_' + #taskId")
     @Transactional(readOnly = true)  // This method is read-only
     public List<CommentDTO> getTaskCommentsWithUserInfo(Long taskId) {
         // This could join with user information - still read-only

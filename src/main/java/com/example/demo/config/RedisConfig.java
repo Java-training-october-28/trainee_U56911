@@ -97,6 +97,8 @@ public class RedisConfig {
                 getCacheConfiguration(Duration.ofMinutes(45)))
                .withCacheConfiguration("users", 
                 getCacheConfiguration(Duration.ofMinutes(120)))
+               .withCacheConfiguration("comments", 
+                getCacheConfiguration(Duration.ofMinutes(30)))
                .withCacheConfiguration("overdue-tasks", 
                 getCacheConfiguration(Duration.ofMinutes(15)));
 
