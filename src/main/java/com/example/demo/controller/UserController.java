@@ -10,6 +10,11 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.exception.ResourceAlreadyExistsException;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse as SwaggerApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +26,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
+@Tag(name = "User Management", description = "Endpoints for user management")
 public class UserController {
     
     @Autowired
@@ -30,6 +36,11 @@ public class UserController {
     private UserMapper userMapper;
     
     @PostMapping
+    @Operation(summary = "Create a new user", description = "Creates a new user account")
+    @ApiResponses({
+        @SwaggerApiResponse(responseCode = "201", description = "User created successfully"),
+        @SwaggerApiResponse(responseCode = "409", description = "Email already exists")
+    })
     public ResponseEntity<ApiResponse<UserDTO>> createUser(@Valid @RequestBody UserCreateDTO createDTO) {
         // Check if email already exists
         if (userService.existsByEmail(createDTO.getEmail())) {
@@ -45,7 +56,12 @@ public class UserController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<UserDTO>> getUser(@PathVariable Long id) {
+    @Operation(summary = "Get user by ID", description = "Retrieves a user by their ID")
+    @ApiResponses({
+        @SwaggerApiResponse(responseCode = "200", description = "User found"),
+        @SwaggerApiResponse(responseCode = "404", description = "User not found")
+    })
+    public ResponseEntity<ApiResponse<UserDTO>> getUser(@Parameter(description = "User ID") @PathVariable Long id) {
         User user = userService.findById(id);
         if (user == null) {
             throw ResourceNotFoundException.user(id);
@@ -57,6 +73,10 @@ public class UserController {
     }
     
     @GetMapping
+    @Operation(summary = "Get all users", description = "Retrieves all users")
+    @ApiResponses({
+        @SwaggerApiResponse(responseCode = "200", description = "Users retrieved")
+    })
     public ResponseEntity<ApiResponse<List<UserDTO>>> getAllUsers() {
         List<User> users = userService.findAll();
         List<UserDTO> userDTOs = users.stream()
@@ -69,8 +89,14 @@ public class UserController {
     }
     
     @PutMapping("/{id}")
+    @Operation(summary = "Update user", description = "Updates a user's information")
+    @ApiResponses({
+        @SwaggerApiResponse(responseCode = "200", description = "User updated successfully"),
+        @SwaggerApiResponse(responseCode = "404", description = "User not found"),
+        @SwaggerApiResponse(responseCode = "409", description = "Email already exists")
+    })
     public ResponseEntity<ApiResponse<UserDTO>> updateUser(
-            @PathVariable Long id, 
+            @Parameter(description = "User ID") @PathVariable Long id, 
             @Valid @RequestBody UserUpdateDTO updateDTO) {
         
         User existingUser = userService.findById(id);
@@ -94,7 +120,12 @@ public class UserController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
+    @Operation(summary = "Delete user", description = "Deletes a user by their ID")
+    @ApiResponses({
+        @SwaggerApiResponse(responseCode = "200", description = "User deleted successfully"),
+        @SwaggerApiResponse(responseCode = "404", description = "User not found")
+    })
+    public ResponseEntity<ApiResponse<Void>> deleteUser(@Parameter(description = "User ID") @PathVariable Long id) {
         User user = userService.findById(id);
         if (user == null) {
             throw ResourceNotFoundException.user(id);
@@ -107,7 +138,12 @@ public class UserController {
     }
     
     @GetMapping("/email/{email}")
-    public ResponseEntity<ApiResponse<UserDTO>> getUserByEmail(@PathVariable String email) {
+    @Operation(summary = "Get user by email", description = "Retrieves a user by their email address")
+    @ApiResponses({
+        @SwaggerApiResponse(responseCode = "200", description = "User found"),
+        @SwaggerApiResponse(responseCode = "404", description = "User not found")
+    })
+    public ResponseEntity<ApiResponse<UserDTO>> getUserByEmail(@Parameter(description = "User email") @PathVariable String email) {
         User user = userService.findByEmail(email);
         if (user == null) {
             throw new ResourceNotFoundException("User", "email", email);
@@ -119,7 +155,11 @@ public class UserController {
     }
     
     @GetMapping("/role/{role}")
-    public ResponseEntity<ApiResponse<List<UserDTO>>> getUsersByRole(@PathVariable Role role) {
+    @Operation(summary = "Get users by role", description = "Retrieves all users with a specific role")
+    @ApiResponses({
+        @SwaggerApiResponse(responseCode = "200", description = "Users retrieved")
+    })
+    public ResponseEntity<ApiResponse<List<UserDTO>>> getUsersByRole(@Parameter(description = "User role") @PathVariable Role role) {
         List<User> users = userService.findByRole(role);
         List<UserDTO> userDTOs = users.stream()
                 .map(userMapper::toDTO)
