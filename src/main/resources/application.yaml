@@ -36,6 +36,12 @@ spring:
     jcache:
       provider: org.ehcache.jsr107.EhcacheCachingProvider
   
+# Token storage configuration - using database only
+app:
+  token:
+    store:
+      type: database  # Using database-based token storage
+  
   # Web configuration
   web:
     resources:

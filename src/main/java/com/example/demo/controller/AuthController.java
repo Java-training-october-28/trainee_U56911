@@ -51,4 +51,61 @@ public class AuthController {
         ApiResponse<AuthResponseDTO> response = ApiResponse.success(authResponse, "Token refreshed successfully");
         return ResponseEntity.ok(response);
     }
+    
+    /**
+     * POST /api/auth/logout - Logout user
+     */
+    @PostMapping("/logout")
+    @Operation(summary = "Logout user", description = "Logout user by revoking refresh token")
+    public ResponseEntity<ApiResponse<Void>> logout(@Valid @RequestBody AuthLogoutDTO logoutDTO) {
+        authService.logout(logoutDTO.getRefreshToken());
+        ApiResponse<Void> response = ApiResponse.success(null, "Logout successful");
+        return ResponseEntity.ok(response);
+    }
+    
+    /**
+     * POST /api/auth/logout-all - Logout from all devices
+     */
+    @PostMapping("/logout-all")
+    @Operation(summary = "Logout from all devices", description = "Revoke all refresh tokens for the authenticated user")
+    public ResponseEntity<ApiResponse<Void>> logoutFromAllDevices(@RequestHeader("Authorization") String authHeader) {
+        // Extract user ID from access token
+        String accessToken = authHeader.substring(7); // Remove "Bearer " prefix
+        Long userId = authService.getUserFromAccessToken(accessToken).getId();
+        
+        authService.logoutFromAllDevices(userId);
+        ApiResponse<Void> response = ApiResponse.success(null, "Logged out from all devices successfully");
+        return ResponseEntity.ok(response);
+    }
+    
+    /**
+     * POST /api/auth/validate - Validate access token
+     */
+    @PostMapping("/validate")
+    @Operation(summary = "Validate access token", description = "Validate if the provided access token is valid and return user information")
+    public ResponseEntity<ApiResponse<AuthValidationDTO>> validateToken(@RequestHeader("Authorization") String authHeader) {
+        try {
+            String accessToken = authHeader.substring(7); // Remove "Bearer " prefix
+            
+            if (authService.validateAccessToken(accessToken)) {
+                var user = authService.getUserFromAccessToken(accessToken);
+                if (user != null) {
+                    AuthValidationDTO validation = new AuthValidationDTO(
+                        true, user.getEmail(), user.getRole().name(), user.getId(), "Token is valid"
+                    );
+                    ApiResponse<AuthValidationDTO> response = ApiResponse.success(validation, "Token validation successful");
+                    return ResponseEntity.ok(response);
+                }
+            }
+            
+            AuthValidationDTO validation = new AuthValidationDTO(false, "Invalid token");
+            ApiResponse<AuthValidationDTO> response = ApiResponse.error("Invalid token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            
+        } catch (Exception e) {
+            AuthValidationDTO validation = new AuthValidationDTO(false, "Token validation failed: " + e.getMessage());
+            ApiResponse<AuthValidationDTO> response = ApiResponse.error("Token validation failed");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+    }
 }

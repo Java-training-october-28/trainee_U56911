@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 public class AuthService {
     
@@ -25,6 +23,12 @@ public class AuthService {
     
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private JwtService jwtService;
+    
+    @Autowired
+    private DatabaseTokenStoreService databaseTokenStoreService;
     
     /**
      * Register a new user
@@ -46,9 +50,12 @@ public class AuthService {
         User savedUser = userService.save(user);
         UserDTO userDTO = userMapper.toDTO(savedUser);
         
-        // Generate tokens (simple implementation)
-        String accessToken = generateAccessToken(savedUser);
-        String refreshToken = generateRefreshToken();
+        // Generate JWT tokens
+        String accessToken = jwtService.generateAccessToken(savedUser);
+        String refreshToken = jwtService.generateRefreshToken(savedUser);
+        
+        // Store refresh token in database
+        databaseTokenStoreService.storeRefreshToken(savedUser.getId(), refreshToken);
         
         return new AuthResponseDTO(accessToken, refreshToken, userDTO);
     }
@@ -71,8 +78,11 @@ public class AuthService {
         UserDTO userDTO = userMapper.toDTO(user);
         
         // Generate tokens
-        String accessToken = generateAccessToken(user);
-        String refreshToken = generateRefreshToken();
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        
+        // Store refresh token in database
+        databaseTokenStoreService.storeRefreshToken(user.getId(), refreshToken);
         
         return new AuthResponseDTO(accessToken, refreshToken, userDTO);
     }
@@ -81,27 +91,71 @@ public class AuthService {
      * Refresh access token
      */
     public AuthResponseDTO refreshToken(AuthRefreshDTO refreshDTO) {
-        // In a real implementation, you would validate the refresh token
-        // For now, we'll return a new access token
-        String accessToken = generateAccessToken(null);
-        String newRefreshToken = generateRefreshToken();
+        String refreshToken = refreshDTO.getRefreshToken();
         
-        return new AuthResponseDTO(accessToken, newRefreshToken, null);
+        // Validate refresh token and get user ID from database
+        Long userId = databaseTokenStoreService.validateRefreshToken(refreshToken);
+        if (userId == null) {
+            throw new BusinessException("Invalid or expired refresh token");
+        }
+        
+        // Get user details
+        User user = userService.findById(userId);
+        if (user == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
+        
+        // Validate JWT refresh token structure (optional double-check)
+        if (!jwtService.validateToken(refreshToken)) {
+            throw new BusinessException("Invalid refresh token format");
+        }
+        
+        // Generate new access token
+        String newAccessToken = jwtService.generateAccessToken(user);
+        
+        // Optionally generate new refresh token (rotate refresh tokens)
+        String newRefreshToken = jwtService.generateRefreshToken(user);
+        
+        // Remove old refresh token and store new one
+        databaseTokenStoreService.revokeRefreshToken(refreshToken);
+        databaseTokenStoreService.storeRefreshToken(userId, newRefreshToken);
+        
+        UserDTO userDTO = userMapper.toDTO(user);
+        return new AuthResponseDTO(newAccessToken, newRefreshToken, userDTO);
     }
     
     /**
-     * Generate access token (simplified implementation)
+     * Logout user - revoke refresh token
      */
-    private String generateAccessToken(User user) {
-        // In a real implementation, you would use JWT
-        // For now, return a simple token
-        return "access_token_" + UUID.randomUUID().toString();
+    public void logout(String refreshToken) {
+        if (refreshToken != null) {
+            databaseTokenStoreService.revokeRefreshToken(refreshToken);
+        }
     }
     
     /**
-     * Generate refresh token (simplified implementation)
+     * Logout user from all devices - revoke all refresh tokens
      */
-    private String generateRefreshToken() {
-        return "refresh_token_" + UUID.randomUUID().toString();
+    public void logoutFromAllDevices(Long userId) {
+        databaseTokenStoreService.revokeAllRefreshTokensForUser(userId);
+    }
+    
+    /**
+     * Validate access token
+     */
+    public boolean validateAccessToken(String accessToken) {
+        return jwtService.validateToken(accessToken);
+    }
+    
+    /**
+     * Get user details from access token
+     */
+    public User getUserFromAccessToken(String accessToken) {
+        if (!jwtService.validateToken(accessToken)) {
+            return null;
+        }
+        
+        Long userId = jwtService.getUserIdFromToken(accessToken);
+        return userService.findById(userId);
     }
 }
