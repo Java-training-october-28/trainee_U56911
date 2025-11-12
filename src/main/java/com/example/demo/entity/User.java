@@ -38,6 +38,25 @@ public class User {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
     
+    // Security fields for JWT and login protection
+    @Column(name = "failed_login_attempts", nullable = false)
+    private Integer failedLoginAttempts = 0;
+    
+    @Column(name = "account_locked", nullable = false)
+    private Boolean accountLocked = false;
+    
+    @Column(name = "last_failed_login")
+    private LocalDateTime lastFailedLogin;
+    
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
+    
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
+    
+    @Column(name = "email_verified", nullable = false)
+    private Boolean emailVerified = false;
+    
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Project> ownedProjects;
     
@@ -75,6 +94,25 @@ public class User {
     
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    
+    // Security-related getters and setters
+    public Integer getFailedLoginAttempts() { return failedLoginAttempts; }
+    public void setFailedLoginAttempts(Integer failedLoginAttempts) { this.failedLoginAttempts = failedLoginAttempts; }
+    
+    public Boolean getAccountLocked() { return accountLocked; }
+    public void setAccountLocked(Boolean accountLocked) { this.accountLocked = accountLocked; }
+    
+    public LocalDateTime getLastFailedLogin() { return lastFailedLogin; }
+    public void setLastFailedLogin(LocalDateTime lastFailedLogin) { this.lastFailedLogin = lastFailedLogin; }
+    
+    public LocalDateTime getLastLogin() { return lastLogin; }
+    public void setLastLogin(LocalDateTime lastLogin) { this.lastLogin = lastLogin; }
+    
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    
+    public Boolean getEmailVerified() { return emailVerified; }
+    public void setEmailVerified(Boolean emailVerified) { this.emailVerified = emailVerified; }
     
     public List<Project> getOwnedProjects() { return ownedProjects; }
     public void setOwnedProjects(List<Project> ownedProjects) { this.ownedProjects = ownedProjects; }

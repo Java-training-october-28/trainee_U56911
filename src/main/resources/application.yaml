@@ -53,6 +53,22 @@ server:
     include-stacktrace: on_param
     include-exception: false
 
+# JWT Configuration
+jwt:
+  secret: mySecretKey123456789012345678901234567890
+  expiration: 86400  # 24 hours in seconds
+  refresh:
+    expiration: 604800  # 7 days in seconds
+
+# Application Security Configuration
+app:
+  max:
+    failed:
+      attempts: 5  # Maximum failed login attempts before lockout
+  account:
+    lockout:
+      duration: 900  # 15 minutes in seconds
+
 # Logging configuration
 logging:
   level:
