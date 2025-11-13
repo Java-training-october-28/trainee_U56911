@@ -16,7 +16,31 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        # JPA optimization properties
+        jdbc.batch_size: 50
+        order_inserts: true
+        order_updates: true
+        jdbc.batch_versioned_data: true
+        # Query optimization
+        query.in_clause_parameter_padding: true
+        # Second-level cache configuration
+        cache.use_second_level_cache: true
+        cache.use_query_cache: true
+        cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+        generate_statistics: true
     open-in-view: false
+  
+  # Cache configuration
+  cache:
+    type: jcache
+    jcache:
+      provider: org.ehcache.jsr107.EhcacheCachingProvider
+  
+# Token storage configuration - using database only
+app:
+  token:
+    store:
+      type: database  # Using database-based token storage
   
   # Web configuration
   web:
@@ -34,6 +58,22 @@ server:
     include-binding-errors: always
     include-stacktrace: on_param
     include-exception: false
+
+# JWT Configuration
+jwt:
+  secret: mySecretKey123456789012345678901234567890
+  expiration: 86400  # 24 hours in seconds
+  refresh:
+    expiration: 604800  # 7 days in seconds
+
+# Application Security Configuration
+app:
+  max:
+    failed:
+      attempts: 5  # Maximum failed login attempts before lockout
+  account:
+    lockout:
+      duration: 900  # 15 minutes in seconds
 
 # Logging configuration
 logging:

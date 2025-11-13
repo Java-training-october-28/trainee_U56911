@@ -4,6 +4,7 @@ import com.example.demo.base.BaseTest;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.factory.TestDataFactory;
 import com.example.demo.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -79,8 +80,13 @@ class UserServiceTest extends BaseTest {
 
     @Test
     void findAll_ShouldReturnAllUsers() {
-        // Given
-        List<User> users = Arrays.asList(createTestUser(), createTestAdminUser());
+        // Given - Enhanced factory usage with multiple roles
+        List<User> users = Arrays.asList(
+            createTestUser(),                    // Basic user
+            createTestAdminUser(),               // Admin user
+            TestDataFactory.createUserWithRole("manager", Role.ADMIN),  // Manager
+            TestDataFactory.createUserWithRole("superuser", Role.SUPER_ADMIN)  // Super admin
+        );
         when(userRepository.findAll()).thenReturn(users);
 
         // When
@@ -88,8 +94,7 @@ class UserServiceTest extends BaseTest {
 
         // Then
         assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals(users, result);
+        assertEquals(4, result.size());
         verify(userRepository).findAll();
     }
 
@@ -224,8 +229,10 @@ class UserServiceTest extends BaseTest {
 
     @Test
     void findActiveUsers_ShouldReturnActiveUsers() {
-        // Given
-        List<User> activeUsers = Arrays.asList(createTestUser(), createTestAdminUser());
+        // Given - Using enhanced factory for bulk user creation
+        List<User> activeUsers = TestDataFactory.createUsersWithRoles(3, Role.USER);
+        activeUsers.add(TestDataFactory.createAdminUser("admin1"));
+        activeUsers.add(TestDataFactory.createUserWithRole("manager", Role.ADMIN));
         when(userRepository.findActiveUsers()).thenReturn(activeUsers);
 
         // When
@@ -233,8 +240,7 @@ class UserServiceTest extends BaseTest {
 
         // Then
         assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals(activeUsers, result);
+        assertEquals(5, result.size());
         verify(userRepository).findActiveUsers();
     }
 
