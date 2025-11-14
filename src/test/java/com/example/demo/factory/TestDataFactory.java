@@ -5,7 +5,7 @@ import com.example.demo.entity.Project;
 import com.example.demo.entity.Task;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.TaskStatus;
-import com.example.demo.entity.TaskPriority;
+import com.example.demo.entity.Priority;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,11 +19,11 @@ public class TestDataFactory {
     // ==================== BASIC CREATION METHODS ====================
     
     public static User createUser(String name) {
-        return new User(name, name + "@example.com", "password");
+        return new User(name, name + "@example.com", "password", Role.USER);
     }
 
     public static User createUser(String name, String email) {
-        return new User(name, email, "password");
+        return new User(name, email, "password", Role.USER);
     }
 
     public static Project createProject(String name, User owner) {
@@ -31,7 +31,9 @@ public class TestDataFactory {
     }
 
     public static Task createTask(String name, Project project, User assignee) {
-        return new Task(name, name + " details", project, assignee);
+        Task task = new Task(name, name + " details", project);
+        task.setAssignee(assignee);
+        return task;
     }
     
     // ==================== ROLE-SPECIFIC USERS ====================
@@ -53,7 +55,7 @@ public class TestDataFactory {
     }
     
     public static User createValidSuperAdmin() {
-        return new User("superadmin", "superadmin@example.com", "password", Role.SUPER_ADMIN);
+        return new User("superadmin", "superadmin@example.com", "password", Role.ADMIN);
     }
     
     // ==================== BULK CREATION METHODS ====================
@@ -110,7 +112,7 @@ public class TestDataFactory {
             projects.add(project);
         }
         
-        user.setProjects(projects);
+        user.setOwnedProjects(projects);
         return user;
     }
     
@@ -125,7 +127,7 @@ public class TestDataFactory {
             projects.add(project);
         }
         
-        user.setProjects(projects);
+        user.setOwnedProjects(projects);
         return user;
     }
     
@@ -151,9 +153,10 @@ public class TestDataFactory {
         String randomName = "task_" + UUID.randomUUID().toString().substring(0, 8);
         String randomDescription = "Description for " + randomName + " - " + random.nextInt(1000);
         TaskStatus[] statuses = TaskStatus.values();
-        TaskPriority[] priorities = TaskPriority.values();
+        Priority[] priorities = Priority.values();
         
-        Task task = new Task(randomName, randomDescription, project, assignee);
+        Task task = new Task(randomName, randomDescription, project);
+        task.setAssignee(assignee);
         task.setStatus(statuses[random.nextInt(statuses.length)]);
         task.setPriority(priorities[random.nextInt(priorities.length)]);
         task.setCreatedAt(LocalDateTime.now().minusDays(random.nextInt(30)));
@@ -219,9 +222,10 @@ public class TestDataFactory {
     }
     
     public static Task createTaskForPerformanceTesting(int taskIndex, Project project, User assignee) {
-        Task task = new Task("perf_task_" + taskIndex, "Performance test task " + taskIndex, project, assignee);
+        Task task = new Task("perf_task_" + taskIndex, "Performance test task " + taskIndex, project);
+        task.setAssignee(assignee);
         task.setStatus(TaskStatus.IN_PROGRESS);
-        task.setPriority(TaskPriority.MEDIUM);
+        task.setPriority(Priority.MEDIUM);
         return task;
     }
     
@@ -246,12 +250,13 @@ public class TestDataFactory {
         // Create team members
         List<User> teamMembers = createUsersWithRoles(teamSize, Role.USER);
         List<Task> tasks = new ArrayList<>();
+        Priority[] priorities = Priority.values();
         
         // Distribute tasks among team members
         for (int i = 0; i < teamSize * 2; i++) { // 2 tasks per team member
             User assignee = teamMembers.get(i % teamSize);
             Task task = createTask("complex_task_" + i, project, assignee);
-            task.setPriority(TaskPriority.values()[i % TaskPriority.values().length]);
+            task.setPriority(priorities[i % priorities.length]);
             tasks.add(task);
         }
         
@@ -267,7 +272,6 @@ public class TestDataFactory {
         user.setPassword("validpassword123");
         user.setRole(Role.USER);
         user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
         return user;
     }
     
@@ -283,7 +287,7 @@ public class TestDataFactory {
         Task task = createTask("valid_task", project, assignee);
         task.setDescription("This is a valid task description");
         task.setStatus(TaskStatus.PENDING);
-        task.setPriority(TaskPriority.HIGH);
+        task.setPriority(Priority.HIGH);
         task.setCreatedAt(LocalDateTime.now());
         task.setUpdatedAt(LocalDateTime.now());
         return task;
