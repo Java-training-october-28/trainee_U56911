@@ -5,7 +5,7 @@ import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse as SwaggerApiResponse;
+// Removed invalid import alias. Use fully qualified name in annotations if needed.
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -26,8 +26,8 @@ public class TaskController {
     
     @GetMapping
     @Operation(summary = "Get all tasks", description = "Retrieves all tasks with optional filters")
-    @ApiResponses({
-        @SwaggerApiResponse(responseCode = "200", description = "Tasks retrieved")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Tasks retrieved")
     })
     public ResponseEntity<ApiResponse<List<TaskDTO>>> getAllTasks(
             @Parameter(description = "Assignee ID") @RequestParam(required = false) Long assigneeId,
@@ -42,9 +42,9 @@ public class TaskController {
     
     @GetMapping("/{id}")
     @Operation(summary = "Get task by ID", description = "Retrieves a task by its ID")
-    @ApiResponses({
-        @SwaggerApiResponse(responseCode = "200", description = "Task found"),
-        @SwaggerApiResponse(responseCode = "404", description = "Task not found")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Task found"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Task not found")
     })
     public ResponseEntity<ApiResponse<TaskDTO>> getTaskById(@Parameter(description = "Task ID") @PathVariable Long id) {
         TaskDTO task = taskService.getTaskById(id);
@@ -54,8 +54,8 @@ public class TaskController {
     
     @PostMapping
     @Operation(summary = "Create new task", description = "Creates a new task")
-    @ApiResponses({
-        @SwaggerApiResponse(responseCode = "201", description = "Task created successfully")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Task created successfully")
     })
     public ResponseEntity<ApiResponse<TaskDTO>> createTask(@Valid @RequestBody TaskCreateDTO createDTO) {
         TaskDTO createdTask = taskService.createTask(createDTO);
@@ -65,9 +65,9 @@ public class TaskController {
     
     @PutMapping("/{id}")
     @Operation(summary = "Update task", description = "Updates all fields of a task")
-    @ApiResponses({
-        @SwaggerApiResponse(responseCode = "200", description = "Task updated successfully"),
-        @SwaggerApiResponse(responseCode = "404", description = "Task not found")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Task updated successfully"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Task not found")
     })
     public ResponseEntity<ApiResponse<TaskDTO>> updateTaskFull(
             @Parameter(description = "Task ID") @PathVariable Long id,
@@ -80,9 +80,9 @@ public class TaskController {
     
     @PatchMapping("/{id}")
     @Operation(summary = "Partially update task", description = "Updates only provided fields of a task")
-    @ApiResponses({
-        @SwaggerApiResponse(responseCode = "200", description = "Task partially updated"),
-        @SwaggerApiResponse(responseCode = "404", description = "Task not found")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Task partially updated"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Task not found")
     })
     public ResponseEntity<ApiResponse<TaskDTO>> updateTask(
             @Parameter(description = "Task ID") @PathVariable Long id, 
@@ -95,9 +95,9 @@ public class TaskController {
     
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete task", description = "Deletes a task by its ID")
-    @ApiResponses({
-        @SwaggerApiResponse(responseCode = "200", description = "Task deleted successfully"),
-        @SwaggerApiResponse(responseCode = "404", description = "Task not found")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Task deleted successfully"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Task not found")
     })
     public ResponseEntity<ApiResponse<Void>> deleteTask(@Parameter(description = "Task ID") @PathVariable Long id) {
         taskService.deleteTask(id);
@@ -107,8 +107,8 @@ public class TaskController {
     
     @GetMapping("/{id}/comments")
     @Operation(summary = "Get comments for task", description = "Retrieves all comments for a task")
-    @ApiResponses({
-        @SwaggerApiResponse(responseCode = "200", description = "Comments retrieved")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Comments retrieved")
     })
     public ResponseEntity<ApiResponse<List<CommentDTO>>> getTaskComments(@Parameter(description = "Task ID") @PathVariable Long id) {
         List<CommentDTO> comments = taskService.getTaskComments(id);
@@ -118,8 +118,8 @@ public class TaskController {
     
     @PostMapping("/{id}/comments")
     @Operation(summary = "Add comment to task", description = "Adds a comment to a task")
-    @ApiResponses({
-        @SwaggerApiResponse(responseCode = "201", description = "Comment added to task")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Comment added to task")
     })
     public ResponseEntity<ApiResponse<CommentDTO>> addCommentToTask(
             @Parameter(description = "Task ID") @PathVariable Long id,
@@ -132,8 +132,8 @@ public class TaskController {
     
     @GetMapping("/assigned/{userId}")
     @Operation(summary = "Get tasks assigned to user", description = "Retrieves all tasks assigned to a specific user")
-    @ApiResponses({
-        @SwaggerApiResponse(responseCode = "200", description = "Tasks retrieved")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Tasks retrieved")
     })
     public ResponseEntity<ApiResponse<List<TaskDTO>>> getTasksAssignedToUser(@Parameter(description = "User ID") @PathVariable Long userId) {
         List<TaskDTO> tasks = taskService.getTasksAssignedToUser(userId);
@@ -143,9 +143,9 @@ public class TaskController {
     
     @PatchMapping("/{id}/assign")
     @Operation(summary = "Assign task to user", description = "Assigns a task to a user")
-    @ApiResponses({
-        @SwaggerApiResponse(responseCode = "200", description = "Task assigned successfully"),
-        @SwaggerApiResponse(responseCode = "404", description = "Task not found")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Task assigned successfully"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Task not found")
     })
     public ResponseEntity<ApiResponse<TaskDTO>> assignTask(
             @Parameter(description = "Task ID") @PathVariable Long id,
@@ -158,9 +158,9 @@ public class TaskController {
     
     @PatchMapping("/{id}/unassign")
     @Operation(summary = "Unassign task", description = "Unassigns a task from a user")
-    @ApiResponses({
-        @SwaggerApiResponse(responseCode = "200", description = "Task unassigned successfully"),
-        @SwaggerApiResponse(responseCode = "404", description = "Task not found")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Task unassigned successfully"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Task not found")
     })
     public ResponseEntity<ApiResponse<TaskDTO>> unassignTask(@Parameter(description = "Task ID") @PathVariable Long id) {
         TaskDTO task = taskService.unassignTask(id);

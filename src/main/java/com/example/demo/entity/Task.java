@@ -92,7 +92,15 @@ public class Task {
     
     // Constructors
     public Task() {}
-    
+
+    // Constructor used in DataLoader (title, description, project, assignee)
+    public Task(String title, String description, Project project, User assignee) {
+        this.title = title;
+        this.description = description;
+        this.project = project;
+        this.assignee = assignee;
+    }
+
     public Task(String title, String description, Project project) {
         this.title = title;
         this.description = description;
@@ -132,4 +140,7 @@ public class Task {
     
     public List<Comment> getComments() { return comments; }
     public void setComments(List<Comment> comments) { this.comments = comments; }
+        public String getName() {
+            return this.title;
+        }
 }

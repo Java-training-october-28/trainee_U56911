@@ -68,7 +68,16 @@ public class User {
     
     // Constructors
     public User() {}
-    
+
+    // Constructor used in DataLoader (username, email, password)
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        // Default role, can be set later
+        this.role = Role.USER;
+    }
+
     public User(String username, String email, String password, Role role) {
         this.username = username;
         this.email = email;

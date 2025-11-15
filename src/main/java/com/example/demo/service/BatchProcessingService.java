@@ -36,62 +36,29 @@ public class BatchProcessingService {
      */
     public BatchProcessingResult updateTaskStatusInBatch(Long projectId, String newStatus) {
         logger.info("Starting batch status update for project {} to status {}", projectId, newStatus);
-        
         int totalProcessed = 0;
         int totalUpdated = 0;
         int pageNumber = 0;
         List<Long> processedTaskIds = new ArrayList<>();
-        
-        Page<Task> taskPage;
-        do {
+        while (true) {
             Pageable pageable = PageRequest.of(pageNumber, BATCH_SIZE);
-            taskPage = taskRepository.findTasksByProjectIdForBatchProcessing(projectId, pageable);
-            
-            List<Long> taskIds = taskPage.getContent().stream()
+            List<Task> taskList = taskRepository.findTasksByProjectIdForBatchProcessing(projectId, pageable);
+            List<Long> taskIds = taskList.stream()
                     .map(Task::getId)
                     .toList();
-            
             if (!taskIds.isEmpty()) {
                 int updatedCount = taskRepository.updateTaskStatusInBulk(taskIds, newStatus);
                 totalUpdated += updatedCount;
                 processedTaskIds.addAll(taskIds);
                 logger.debug("Processed batch {}: {} tasks, {} updated", pageNumber, taskIds.size(), updatedCount);
+                totalProcessed += taskIds.size();
+                pageNumber++;
+            } else {
+                break;
             }
-            
-            totalProcessed += taskPage.getNumberOfElements();
-            pageNumber++;
-            
-        } while (taskPage.hasNext());
-        
+        }
         BatchProcessingResult result = new BatchProcessingResult(totalProcessed, totalUpdated, processedTaskIds);
         logger.info("Batch status update completed: {}", result);
-        
-        return result;
-    }
-
-    /**
-     * Batch reassign tasks to a new assignee
-     */
-    public BatchProcessingResult reassignTasksInBatch(List<Long> taskIds, Long newAssigneeId) {
-        logger.info("Starting batch reassignment of {} tasks to assignee {}", taskIds.size(), newAssigneeId);
-        
-        // Process in batches to avoid memory issues
-        int totalUpdated = 0;
-        List<Long> processedTaskIds = new ArrayList<>();
-        
-        for (int i = 0; i < taskIds.size(); i += BATCH_SIZE) {
-            List<Long> batch = taskIds.subList(i, Math.min(i + BATCH_SIZE, taskIds.size()));
-            
-            int updatedCount = taskRepository.reassignTasksInBulk(batch, newAssigneeId);
-            totalUpdated += updatedCount;
-            processedTaskIds.addAll(batch);
-            
-            logger.debug("Processed reassignment batch: {} tasks, {} updated", batch.size(), updatedCount);
-        }
-        
-        BatchProcessingResult result = new BatchProcessingResult(taskIds.size(), totalUpdated, processedTaskIds);
-        logger.info("Batch reassignment completed: {}", result);
-        
         return result;
     }
 
@@ -100,37 +67,39 @@ public class BatchProcessingService {
      */
     public BatchProcessingResult refreshTaskTimestampsInBatch(LocalDateTime cutoffDate) {
         logger.info("Starting batch timestamp refresh for tasks older than {}", cutoffDate);
-        
+
         int totalProcessed = 0;
         int totalUpdated = 0;
         int pageNumber = 0;
         List<Long> processedTaskIds = new ArrayList<>();
-        
-        Page<Task> taskPage;
-        do {
+
+        while (true) {
             Pageable pageable = PageRequest.of(pageNumber, BATCH_SIZE);
-            taskPage = taskRepository.findAll(pageable);
-            
+            Page<Task> taskPage = taskRepository.findAll(pageable);
+
             List<Long> taskIds = taskPage.getContent().stream()
                     .filter(task -> task.getUpdatedAt().isBefore(cutoffDate))
                     .map(Task::getId)
                     .toList();
-            
+
             if (!taskIds.isEmpty()) {
                 int updatedCount = taskRepository.updateTimestampsForTasks(taskIds);
                 totalUpdated += updatedCount;
                 processedTaskIds.addAll(taskIds);
                 logger.debug("Processed timestamp batch {}: {} tasks, {} updated", pageNumber, taskIds.size(), updatedCount);
             }
-            
+
             totalProcessed += taskPage.getNumberOfElements();
             pageNumber++;
-            
-        } while (taskPage.hasNext());
-        
+
+            if (pageNumber >= taskPage.getTotalPages()) {
+                break;
+            }
+        }
+
         BatchProcessingResult result = new BatchProcessingResult(totalProcessed, totalUpdated, processedTaskIds);
         logger.info("Batch timestamp refresh completed: {}", result);
-        
+
         return result;
     }
 
@@ -184,12 +153,6 @@ public class BatchProcessingService {
 
         public List<Long> getProcessedTaskIds() {
             return processedTaskIds;
-        }
-
-        @Override
-        public String toString() {
-            return String.format("BatchProcessingResult{processed=%d, updated=%d, taskIds=%d}",
-                    totalProcessed, totalUpdated, processedTaskIds.size());
         }
     }
 }

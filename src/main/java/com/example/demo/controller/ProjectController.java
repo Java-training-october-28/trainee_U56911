@@ -73,8 +73,7 @@ public class ProjectController {
     @Operation(summary = "Update project", description = "Updates all fields of a project")
     public ResponseEntity<ApiResponse<ProjectDTO>> updateProject(
             @PathVariable Long id,
-            @Valid @RequestBody ProjectCreateDTO updateDTO) {
-        
+            @Valid @RequestBody ProjectUpdateDTO updateDTO) {
         ProjectDTO updatedProject = projectService.updateProject(id, updateDTO);
         ApiResponse<ProjectDTO> response = ApiResponse.success(updatedProject, "Project updated successfully");
         return ResponseEntity.ok(response);

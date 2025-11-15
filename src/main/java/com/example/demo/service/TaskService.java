@@ -1,4 +1,7 @@
 package com.example.demo.service;
+import java.util.List;
+import com.example.demo.dto.CommentDTO;
+import com.example.demo.dto.CommentCreateDTO;
 
 import com.example.demo.dto.TaskDTO;
 import com.example.demo.dto.TaskCreateDTO;
@@ -20,6 +23,45 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class TaskService implements TaskServiceInterface {
+        // --- Missing methods for TaskController ---
+        public List<TaskDTO> getAllTasks(Long assigneeId, Long projectId, String status, String priority) {
+            // TODO: Implement filtering logic
+            return new java.util.ArrayList<>();
+        }
+
+        public TaskDTO updateTaskFull(Long id, TaskCreateDTO updateDTO) {
+            // TODO: Implement full update logic
+            return null;
+        }
+
+        public void deleteTask(Long id) {
+            // TODO: Implement delete logic
+        }
+
+        public List<CommentDTO> getTaskComments(Long id) {
+            // TODO: Implement get comments logic
+            return new java.util.ArrayList<>();
+        }
+
+        public CommentDTO addCommentToTask(Long id, CommentCreateDTO commentCreateDTO) {
+            // TODO: Implement add comment logic
+            return null;
+        }
+
+        public List<TaskDTO> getTasksAssignedToUser(Long userId) {
+            // TODO: Implement assigned tasks logic
+            return new java.util.ArrayList<>();
+        }
+
+        public TaskDTO assignTask(Long id, Long assigneeId) {
+            // TODO: Implement assign logic
+            return null;
+        }
+
+        public TaskDTO unassignTask(Long id) {
+            // TODO: Implement unassign logic
+            return null;
+        }
     
     @Autowired
     private TaskMapper taskMapper;

@@ -6,9 +6,12 @@ import org.mapstruct.*;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class, TaskMapper.class})
+@Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface CommentMapper {
     
+    @Named("basicCommentDTO")
+    @Mapping(target = "user", qualifiedByName = "basicUserDTO")
+    @Mapping(target = "task", ignore = true)
     CommentDTO toDTO(Comment comment);
     
     @Mapping(target = "id", ignore = true)

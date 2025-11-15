@@ -22,7 +22,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     
     List<Project> findByOwnerId(Long ownerId);
     List<Project> findByOwnerIdOrderByCreatedAtDesc(Long ownerId);
-    List<Project> findByStatus(String status);
     
     // Entity graph queries for optimized fetching
     @EntityGraph(value = "Project.withOwner", type = EntityGraph.EntityGraphType.LOAD)
