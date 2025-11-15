@@ -1,0 +1,31 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+*.md
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test reports
+test-results/
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
