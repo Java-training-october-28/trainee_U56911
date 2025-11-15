@@ -14,7 +14,7 @@ env:
 jobs:
   test:
     name: Test Application
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     
     steps:
     - name: Checkout code
@@ -41,7 +41,7 @@ jobs:
 
   build-and-push:
     name: Build and Push Docker Image
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: test
     if: github.event_name != 'pull_request'
     
@@ -96,7 +96,7 @@ jobs:
         
   security-scan:
     name: Security Scan
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build-and-push
     if: github.event_name != 'pull_request'
     
