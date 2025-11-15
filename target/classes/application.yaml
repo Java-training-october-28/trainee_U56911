@@ -3,10 +3,13 @@ spring:
     name: demo-app
   
   datasource:
-    url: ${APP_DATASOURCE_URL:jdbc:postgresql://localhost:5432/demo_db}
-    username: ${APP_DATASOURCE_USERNAME:postgres}
-    password: ${APP_DATASOURCE_PASSWORD:password}
-    driver-class-name: ${APP_DATASOURCE_DRIVER:org.postgresql.Driver}
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
 
   main:
     allow-circular-references: true
@@ -17,7 +20,7 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
         # JPA optimization properties
         jdbc.batch_size: 50
