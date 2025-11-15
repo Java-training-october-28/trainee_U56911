@@ -107,6 +107,11 @@ jobs:
     - name: Install Railway CLI
       run: npm install -g @railway/cli --force
 
+    - name: Debug Railway Token
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      run: |
+        Write-Host "RAILWAY_TOKEN starts with: $($env:RAILWAY_TOKEN.Substring(0,6))"
     - name: Deploy to Railway
       env:
         RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
