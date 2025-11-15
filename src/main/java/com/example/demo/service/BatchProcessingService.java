@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Task;
+import com.example.demo.entity.TaskStatus;
 import com.example.demo.repository.TaskRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class BatchProcessingService {
      * Batch update task status for all tasks in a project
      * Uses pagination to process large datasets efficiently
      */
-    public BatchProcessingResult updateTaskStatusInBatch(Long projectId, String newStatus) {
+    public BatchProcessingResult updateTaskStatusInBatch(Long projectId, com.example.demo.entity.TaskStatus newStatus) {
         logger.info("Starting batch status update for project {} to status {}", projectId, newStatus);
         int totalProcessed = 0;
         int totalUpdated = 0;
@@ -116,8 +117,8 @@ public class BatchProcessingService {
                 .toList();
         
         if (!taskIds.isEmpty()) {
-            // Mark tasks as overdue status
-            int updatedCount = taskRepository.updateTaskStatusInBulk(taskIds, "OVERDUE");
+            // Mark tasks as PENDING status for overdue tasks
+            int updatedCount = taskRepository.updateTaskStatusInBulk(taskIds, TaskStatus.PENDING);
             
             BatchProcessingResult result = new BatchProcessingResult(overdueTasks.size(), updatedCount, taskIds);
             logger.info("Batch overdue task processing completed: {}", result);

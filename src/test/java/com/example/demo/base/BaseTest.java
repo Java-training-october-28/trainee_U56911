@@ -1,5 +1,6 @@
 package com.example.demo.base;
 
+import com.example.demo.dto.UserDTO;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Project;
@@ -23,7 +24,7 @@ import java.util.List;
 public abstract class BaseTest {
     
     // Test Constants
-    protected static final String TEST_EMAIL = "test@example.com";
+    protected static final String TEST_EMAIL = "testuser@example.com";
     protected static final String TEST_USERNAME = "testuser";
     protected static final String TEST_PASSWORD = "testpassword123";
     protected static final String ENCODED_PASSWORD = "$2a$10$abcdefghijklmnopqrstuvwxyz";
@@ -32,6 +33,7 @@ public abstract class BaseTest {
     protected static final Long TEST_TASK_ID = 1L;
     protected static final String TEST_ACCESS_TOKEN = "access_token_test_123";
     protected static final String TEST_REFRESH_TOKEN = "refresh_token_test_123";
+    protected static final String TEST_NEW_REFRESH_TOKEN = "new_refresh_token_test_456";
     
     // Project test constants
     protected static final String TEST_PROJECT_NAME = "Test Project";
@@ -46,6 +48,19 @@ public abstract class BaseTest {
      */
     protected User createTestUser() {
         return TestDataFactory.createUser(TEST_USERNAME);
+    }
+
+    /**
+     * Create a test UserDTO
+     */
+    protected UserDTO createTestUserDTO() {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(TEST_USER_ID);
+        userDTO.setUsername(TEST_USERNAME);
+        userDTO.setEmail(TEST_EMAIL);
+        userDTO.setRole(Role.USER);
+        userDTO.setCreatedAt(LocalDateTime.now());
+        return userDTO;
     }
 
     /**

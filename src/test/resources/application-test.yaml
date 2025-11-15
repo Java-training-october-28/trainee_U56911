@@ -1,0 +1,61 @@
+# Test configuration
+spring:
+  # Database configuration for tests
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+    
+  # JPA configuration for tests
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    
+  # Disable Redis for tests
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+    
+  # Cache configuration for tests
+  cache:
+    type: simple
+    
+  # Allow circular references
+  main:
+    allow-circular-references: true
+    
+  # Security configuration for tests
+  security:
+    user:
+      name: testuser
+      password: testpass
+      roles: USER
+
+# Application specific configurations
+app:
+  token:
+    store:
+      type: database
+
+# JWT configuration for tests
+jwt:
+  secret: testSecretKey123456789012345678901234567890
+  expiration: 86400
+  refresh:
+    expiration: 604800
+
+# Logging configuration for tests
+logging:
+  level:
+    org.springframework.web: INFO
+    org.hibernate.SQL: INFO
+    com.example.demo: DEBUG
+    
+# Disable banner in tests
+spring.main.banner-mode: off

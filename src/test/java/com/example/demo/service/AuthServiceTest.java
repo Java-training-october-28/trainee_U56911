@@ -33,6 +33,12 @@ class AuthServiceTest extends BaseTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private JwtService jwtService;
+
+    @Mock
+    private DatabaseTokenStoreService databaseTokenStoreService;
+
     @InjectMocks
     private AuthService authService;
 
@@ -52,6 +58,8 @@ class AuthServiceTest extends BaseTest {
         when(passwordEncoder.encode(TEST_PASSWORD)).thenReturn(ENCODED_PASSWORD);
         when(userService.save(any(User.class))).thenReturn(savedUser);
         when(userMapper.toDTO(savedUser)).thenReturn(userDTO);
+        when(jwtService.generateAccessToken(savedUser)).thenReturn(TEST_ACCESS_TOKEN);
+        when(jwtService.generateRefreshToken(savedUser)).thenReturn(TEST_REFRESH_TOKEN);
 
         // When
         AuthResponseDTO result = authService.register(registerDTO);
@@ -124,6 +132,8 @@ class AuthServiceTest extends BaseTest {
         when(userService.findByEmail(TEST_EMAIL)).thenReturn(user);
         when(passwordEncoder.matches(TEST_PASSWORD, user.getPassword())).thenReturn(true);
         when(userMapper.toDTO(user)).thenReturn(userDTO);
+        when(jwtService.generateAccessToken(user)).thenReturn(TEST_ACCESS_TOKEN);
+        when(jwtService.generateRefreshToken(user)).thenReturn(TEST_REFRESH_TOKEN);
 
         // When
         AuthResponseDTO result = authService.login(loginDTO);
@@ -183,18 +193,30 @@ class AuthServiceTest extends BaseTest {
     void refreshToken_ShouldGenerateNewTokens() {
         // Given
         AuthRefreshDTO refreshDTO = new AuthRefreshDTO(TEST_REFRESH_TOKEN);
+        User user = createTestUser();
+        UserDTO userDTO = createTestUserDTO();
+        
+        when(databaseTokenStoreService.validateRefreshToken(TEST_REFRESH_TOKEN))
+            .thenReturn(TEST_USER_ID);
+        when(userService.findById(TEST_USER_ID)).thenReturn(user);
+        when(jwtService.validateToken(TEST_REFRESH_TOKEN)).thenReturn(true);
+        when(jwtService.generateAccessToken(user)).thenReturn(TEST_ACCESS_TOKEN);
+        when(jwtService.generateRefreshToken(user)).thenReturn(TEST_NEW_REFRESH_TOKEN);
+        when(userMapper.toDTO(user)).thenReturn(userDTO);
 
         // When
         AuthResponseDTO result = authService.refreshToken(refreshDTO);
 
         // Then
         assertNotNull(result);
-        assertNotNull(result.getAccessToken());
-        assertNotNull(result.getRefreshToken());
+        assertEquals(TEST_ACCESS_TOKEN, result.getAccessToken());
+        assertEquals(TEST_NEW_REFRESH_TOKEN, result.getRefreshToken());
         assertEquals("Bearer", result.getTokenType());
-        assertNull(result.getUser()); // User should be null for refresh token response
-        assertTrue(result.getAccessToken().startsWith("access_token_"));
-        assertTrue(result.getRefreshToken().startsWith("refresh_token_"));
+        assertNotNull(result.getUser());
+        assertEquals(userDTO.getId(), result.getUser().getId());
+        
+        verify(databaseTokenStoreService).revokeRefreshToken(TEST_REFRESH_TOKEN);
+        verify(databaseTokenStoreService).storeRefreshToken(TEST_USER_ID, TEST_NEW_REFRESH_TOKEN);
     }
 
     @Test

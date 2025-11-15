@@ -68,6 +68,16 @@ public class CommentService {
     }
     
     /**
+     * READ operation - Get all comments
+     */
+    @Cacheable(value = "comments", key = "'all'")
+    @Transactional(readOnly = true)
+    public List<CommentDTO> getAllComments() {
+        List<Comment> comments = commentRepository.findAll();
+        return commentMapper.toDTOList(comments);
+    }
+    
+    /**
      * READ operation - Method-level @Transactional with readOnly optimization
      * readOnly=true tells Spring:
      * - Don't flush changes to database

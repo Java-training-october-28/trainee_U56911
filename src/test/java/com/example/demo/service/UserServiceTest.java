@@ -85,7 +85,7 @@ class UserServiceTest extends BaseTest {
             createTestUser(),                    // Basic user
             createTestAdminUser(),               // Admin user
             TestDataFactory.createUserWithRole("manager", Role.ADMIN),  // Manager
-            TestDataFactory.createUserWithRole("superuser", Role.SUPER_ADMIN)  // Super admin
+            TestDataFactory.createUserWithRole("superuser", Role.ADMIN)  // Admin
         );
         when(userRepository.findAll()).thenReturn(users);
 

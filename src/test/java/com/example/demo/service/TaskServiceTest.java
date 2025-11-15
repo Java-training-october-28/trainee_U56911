@@ -145,6 +145,6 @@ class TaskServiceTest {
     @Test
     void updateTaskStatus_taskNotFound_throws() {
         when(taskRepository.findById(555L)).thenReturn(Optional.empty());
-        assertThrows(ResourceNotFoundException.class, () -> taskService.updateTaskStatus(555L, TaskStatus.DONE));
+        assertThrows(ResourceNotFoundException.class, () -> taskService.updateTaskStatus(555L, TaskStatus.COMPLETED));
     }
 }

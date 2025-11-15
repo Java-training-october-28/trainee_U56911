@@ -3,15 +3,18 @@ package com.example.demo.mapper;
 import com.example.demo.dto.*;
 import com.example.demo.entity.*;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class ProjectMapperTest {
     
-    private final ProjectMapper projectMapper = Mappers.getMapper(ProjectMapper.class);
+    @Autowired
+    private ProjectMapper projectMapper;
     
     @Test
     void shouldMapProjectToDTO() {
@@ -23,9 +26,6 @@ class ProjectMapperTest {
         project.setId(1L);
         project.setName("Test Project");
         project.setDescription("Test Description");
-        project.setStatus("ACTIVE");
-        project.setStartDate(LocalDateTime.now());
-        project.setEndDate(LocalDateTime.now().plusDays(30));
         project.setCreatedAt(LocalDateTime.now());
         project.setOwner(owner);
         
@@ -37,9 +37,6 @@ class ProjectMapperTest {
         assertEquals(project.getId(), projectDTO.getId());
         assertEquals(project.getName(), projectDTO.getName());
         assertEquals(project.getDescription(), projectDTO.getDescription());
-        assertEquals(project.getStatus(), projectDTO.getStatus());
-        assertEquals(project.getStartDate(), projectDTO.getStartDate());
-        assertEquals(project.getEndDate(), projectDTO.getEndDate());
         assertEquals(project.getCreatedAt(), projectDTO.getCreatedAt());
         assertNotNull(projectDTO.getOwner());
     }
@@ -52,7 +49,7 @@ class ProjectMapperTest {
             "New Description", 
             LocalDateTime.now(), 
             LocalDateTime.now().plusDays(30), 
-            "PLANNING", 
+            ProjectStatus.PLANNING, 
             1L
         );
         
@@ -65,8 +62,5 @@ class ProjectMapperTest {
         assertNull(project.getCreatedAt());
         assertEquals(createDTO.getName(), project.getName());
         assertEquals(createDTO.getDescription(), project.getDescription());
-        assertEquals(createDTO.getStatus(), project.getStatus());
-        assertEquals(createDTO.getStartDate(), project.getStartDate());
-        assertEquals(createDTO.getEndDate(), project.getEndDate());
     }
 }

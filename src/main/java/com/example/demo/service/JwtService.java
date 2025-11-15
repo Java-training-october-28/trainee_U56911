@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -12,15 +13,21 @@ public class JwtService {
             // TODO: Implement user-based validation if needed
             return validateToken(token);
         }
-    private final String SECRET_KEY = "your_secret_key";
-    private final long EXPIRATION_TIME = 86400000; // 1 day
+    
+    @Value("${jwt.secret:testSecretKey123456789012345678901234567890}")
+    private String SECRET_KEY;
+    
+    @Value("${jwt.expiration:86400}")
+    private long EXPIRATION_TIME; // in seconds
+    
+    private final long REFRESH_EXPIRATION_TIME = EXPIRATION_TIME * 7; // 7 days
 
     public String generateAccessToken(Object user) {
         // Replace Object with your User entity and set claims as needed
         return Jwts.builder()
                 .setSubject(user.toString())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME * 1000)) // convert to milliseconds
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
@@ -30,7 +37,7 @@ public class JwtService {
         return Jwts.builder()
                 .setSubject(user.toString())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME * 7))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME * 1000)) // convert to milliseconds
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }

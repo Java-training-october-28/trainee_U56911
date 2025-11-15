@@ -1,6 +1,8 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.Task;
+import com.example.demo.entity.TaskStatus;
+import com.example.demo.entity.Priority;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,7 +26,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     // Basic pagination support
     Page<Task> findByProjectId(Long projectId, Pageable pageable);
     Page<Task> findByAssigneeId(Long assigneeId, Pageable pageable);
-    Page<Task> findByStatusAndPriority(String status, String priority, Pageable pageable);
+    Page<Task> findByStatusAndPriority(TaskStatus status, Priority priority, Pageable pageable);
     
     // Entity graph queries for optimized fetching
     @EntityGraph(value = "Task.withProject", type = EntityGraph.EntityGraphType.LOAD)
@@ -97,7 +99,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Modifying
     @Query("UPDATE Task t SET t.status = :newStatus WHERE t.id IN :taskIds")
     int updateTaskStatusInBulk(@Param("taskIds") List<Long> taskIds, 
-                              @Param("newStatus") String newStatus);
+                              @Param("newStatus") TaskStatus newStatus);
     
     @Modifying
     @Query("UPDATE Task t SET t.assignee.id = :assigneeId WHERE t.id IN :taskIds")

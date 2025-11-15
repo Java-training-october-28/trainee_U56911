@@ -30,6 +30,16 @@ public class CommentController {
     }
     
     /**
+     * GET /api/comments - Get all comments
+     */
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<CommentDTO>>> getAllComments() {
+        List<CommentDTO> comments = commentService.getAllComments();
+        ApiResponse<List<CommentDTO>> response = ApiResponse.success(comments, "Retrieved all comments");
+        return ResponseEntity.ok(response);
+    }
+    
+    /**
      * GET /api/comments/{id} - Get comment by ID
      */
     @GetMapping("/{id}")

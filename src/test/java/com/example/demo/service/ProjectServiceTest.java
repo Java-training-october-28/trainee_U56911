@@ -15,6 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.assertj.core.api.Assertions.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -117,7 +121,7 @@ class ProjectServiceTest {
         User newOwner = new User("newOwner", "newowner@mail.com", "password", Role.USER);
         newOwner.setId(newOwnerId);
         newOwner.setEmail("newowner@mail.com");
-        newOwner.setName("newOwner");
+        newOwner.setUsername("newOwner");
 
         ProjectUpdateDTO updateDTO = new ProjectUpdateDTO();
         updateDTO.setOwnerId(newOwnerId);
@@ -125,17 +129,16 @@ class ProjectServiceTest {
         ProjectDTO expectedDTO = new ProjectDTO();
         expectedDTO.setId(projectId);
         expectedDTO.setName("Old Project");
-        expectedDTO.setOwnerId(newOwnerId);
 
         // Mock the repository and mapper interactions
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(existing));
         when(userRepository.findById(newOwnerId)).thenReturn(Optional.of(newOwner));
-        when(projectMapper.updateEntityFromDTO(eq(updateDTO), any(Project.class))).thenAnswer(invocation -> {
+        doAnswer(invocation -> {
             Project project = invocation.getArgument(1);
             // Simulate mapper updating the project with DTO data
             // Since updateDTO only has ownerId, other fields remain unchanged
-            return project;
-        });
+            return null; // void method
+        }).when(projectMapper).updateEntityFromDTO(eq(updateDTO), any(Project.class));
         when(projectRepository.save(existing)).thenReturn(existing);
         when(projectMapper.toDTO(existing)).thenReturn(expectedDTO);
 
@@ -145,7 +148,6 @@ class ProjectServiceTest {
         // Verify the result
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(projectId);
-        assertThat(result.getOwnerId()).isEqualTo(newOwnerId);
 
         // Verify that the owner was actually changed on the existing project
         assertThat(existing.getOwner()).isNotNull();

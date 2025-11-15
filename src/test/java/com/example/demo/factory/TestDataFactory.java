@@ -33,6 +33,7 @@ public class TestDataFactory {
     public static Task createTask(String name, Project project, User assignee) {
         Task task = new Task(name, name + " details", project);
         task.setAssignee(assignee);
+        task.setDueDate(LocalDateTime.now().plusDays(7)); // Set future due date to avoid validation errors
         return task;
     }
     
@@ -160,6 +161,7 @@ public class TestDataFactory {
         task.setStatus(statuses[random.nextInt(statuses.length)]);
         task.setPriority(priorities[random.nextInt(priorities.length)]);
         task.setCreatedAt(LocalDateTime.now().minusDays(random.nextInt(30)));
+        task.setDueDate(LocalDateTime.now().plusDays(random.nextInt(30) + 1)); // Set future due date to avoid validation errors
         
         return task;
     }
@@ -226,6 +228,7 @@ public class TestDataFactory {
         task.setAssignee(assignee);
         task.setStatus(TaskStatus.IN_PROGRESS);
         task.setPriority(Priority.MEDIUM);
+        task.setDueDate(LocalDateTime.now().plusDays(7)); // Set future due date to avoid validation errors
         return task;
     }
     

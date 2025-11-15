@@ -33,6 +33,17 @@ public class ProjectController {
     }
     
     /**
+     * GET /api/projects - Get all projects
+     */
+    @GetMapping
+    @Operation(summary = "Get all projects", description = "Retrieves all projects")
+    public ResponseEntity<ApiResponse<List<ProjectDTO>>> getAllProjects() {
+        List<ProjectDTO> projects = projectService.getAllProjects();
+        ApiResponse<List<ProjectDTO>> response = ApiResponse.success(projects, "Retrieved all projects");
+        return ResponseEntity.ok(response);
+    }
+    
+    /**
      * GET /api/projects/{id} - Get project by ID
      */
     @GetMapping("/{id}")

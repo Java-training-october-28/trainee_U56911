@@ -102,6 +102,15 @@ public class ProjectService implements ProjectServiceInterface {
     }
     
     /**
+     * Get all projects
+     */
+    @Transactional(readOnly = true)
+    public List<ProjectDTO> getAllProjects() {
+        List<Project> projects = projectRepository.findAll();
+        return projectMapper.toDTOList(projects);
+    }
+    
+    /**
      * Get all projects for a specific owner
      */
     @Transactional(readOnly = true)

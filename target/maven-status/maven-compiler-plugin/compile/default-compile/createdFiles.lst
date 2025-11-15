@@ -34,7 +34,6 @@ com\example\demo\dto\CommentDTO.class
 com\example\demo\dto\CommentCreateDTO.class
 com\example\demo\dto\TaskDTO.class
 com\example\demo\config\SecurityConfig.class
-com\example\demo\service\BatchProcessingService$BatchProcessingResult.class
 com\example\demo\mapper\TaskMapper.class
 com\example\demo\controller\ProjectController.class
 com\example\demo\mapper\TaskMapper$1.class
@@ -45,7 +44,6 @@ com\example\demo\entity\RefreshToken.class
 com\example\demo\entity\User.class
 com\example\demo\controller\CommentController.class
 com\example\demo\mapper\UserMapperImpl.class
-com\example\demo\mapper\TaskMapperImpl.class
 com\example\demo\mapper\CommentMapperImpl.class
 com\example\demo\repository\UserRepository.class
 com\example\demo\dto\TaskUpdateDTO.class
@@ -72,7 +70,6 @@ com\example\demo\dto\response\ErrorResponse.class
 com\example\demo\dto\TaskCreateDTO.class
 com\example\demo\config\DataLoader.class
 com\example\demo\exception\BaseException.class
-com\example\demo\service\BatchProcessingService.class
 com\example\demo\mapper\UserMapper.class
 com\example\demo\mapper\ProjectMapper.class
 com\example\demo\repository\TaskRepository.class

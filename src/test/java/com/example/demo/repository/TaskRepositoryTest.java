@@ -54,7 +54,7 @@ class TaskRepositoryTest {
         task.setPriority(Priority.MEDIUM);
         task.setDueDate(LocalDateTime.now().plusDays(2));
         taskRepository.save(task);
-        var page = taskRepository.findByStatusAndPriority("PENDING", "MEDIUM", PageRequest.of(0, 10));
+        var page = taskRepository.findByStatusAndPriority(TaskStatus.PENDING, Priority.MEDIUM, PageRequest.of(0, 10));
         assertThat(page.getContent()).isNotEmpty();
     }
 }

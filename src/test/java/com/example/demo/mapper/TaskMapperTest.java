@@ -2,6 +2,8 @@ package com.example.demo.mapper;
 
 import com.example.demo.dto.TaskUpdateDTO;
 import com.example.demo.entity.Task;
+import com.example.demo.entity.TaskStatus;
+import com.example.demo.entity.Priority;
 import com.example.demo.mapper.TaskMapper;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -21,8 +23,8 @@ class TaskMapperTest {
         existingTask.setId(1L);
         existingTask.setTitle("Original Title");
         existingTask.setDescription("Original Description");
-        existingTask.setStatus("TODO");
-        existingTask.setPriority("HIGH");
+        existingTask.setStatus(TaskStatus.TODO);
+        existingTask.setPriority(Priority.HIGH);
         existingTask.setDueDate(LocalDateTime.of(2024, 1, 1, 10, 0));
         existingTask.setCreatedAt(LocalDateTime.of(2023, 12, 1, 9, 0));
         
@@ -36,9 +38,9 @@ class TaskMapperTest {
         
         // Then - only specified fields should be updated
         assertEquals("Updated Title", existingTask.getTitle());           // ✅ Updated
-        assertEquals("IN_PROGRESS", existingTask.getStatus());            // ✅ Updated
+        assertEquals(TaskStatus.IN_PROGRESS, existingTask.getStatus());  // ✅ Updated
         assertEquals("Original Description", existingTask.getDescription()); // ✅ Preserved
-        assertEquals("HIGH", existingTask.getPriority());                 // ✅ Preserved
+        assertEquals(Priority.HIGH, existingTask.getPriority());         // ✅ Preserved
         assertEquals(LocalDateTime.of(2024, 1, 1, 10, 0), existingTask.getDueDate()); // ✅ Preserved
         
         // Critical fields should never change

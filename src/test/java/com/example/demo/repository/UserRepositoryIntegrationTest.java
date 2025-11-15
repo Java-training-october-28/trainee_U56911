@@ -1,6 +1,6 @@
 package com.example.demo.repository;
 
-import com.example.demo.base.BaseIntegrationTest;
+import com.example.demo.base.BaseTest;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("test")
-class UserRepositoryIntegrationTest extends BaseIntegrationTest {
+class UserRepositoryIntegrationTest extends BaseTest {
 
     @Autowired
     private TestEntityManager entityManager;
@@ -159,7 +159,6 @@ class UserRepositoryIntegrationTest extends BaseIntegrationTest {
         assertThat(savedUser.getEmail()).isEqualTo(TEST_EMAIL);
         assertThat(savedUser.getUsername()).isEqualTo(TEST_USERNAME);
         assertThat(savedUser.getCreatedAt()).isNotNull();
-        assertThat(savedUser.getUpdatedAt()).isNotNull();
     }
 
     @Test
@@ -286,6 +285,6 @@ class UserRepositoryIntegrationTest extends BaseIntegrationTest {
         assertThat(updatedUser.getId()).isEqualTo(user.getId());
         assertThat(updatedUser.getUsername()).isEqualTo("updated_username");
         assertThat(updatedUser.getEmail()).isEqualTo("updated@example.com");
-        assertThat(updatedUser.getUpdatedAt()).isAfter(updatedUser.getCreatedAt());
+        // User entity doesn't have updatedAt field
     }
 }
