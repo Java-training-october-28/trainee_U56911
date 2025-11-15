@@ -103,18 +103,11 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
         platforms: linux/amd64,linux/arm64
-
-    - name: Install Railway CLI
-      run: npm install -g @railway/cli --force
-
-    - name: Debug Railway Token
+        
+    - name: Deploy to Render
       env:
-        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
       run: |
-        Write-Host "RAILWAY_TOKEN starts with: $($env:RAILWAY_TOKEN.Substring(0,6))"
-    - name: Deploy to Railway
-      env:
-        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-      run: railway up --ci
-        
-        
+        curl -X POST "https://api.render.com/v1/services/srv-d4cf92q4d50c73d5mhkg/deploys" \
+          -H "Authorization: Bearer $RENDER_API_KEY"
+
