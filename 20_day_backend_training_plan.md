@@ -264,7 +264,7 @@
 
 ---
 
-### Day 13: Advanced JPA Features & Optimization
+### Day 9: Advanced JPA Features & Optimization
 **Duration**: 8 hours  
 **Learning Objectives**:
 - Implement JPA optimizations
@@ -293,7 +293,7 @@
 
 ---
 
-### Day 14: REST Controllers Implementation
+### Day 10: REST Controllers Implementation
 **Duration**: 8 hours  
 **Learning Objectives**:
 - Create REST controllers following RESTful principles
@@ -323,9 +323,195 @@
 
 **GitHub Check**: Controllers functional with documentation
 
+
 ---
 
-### Day 15: Caching, Monitoring & Actuator
+## 📋 WEEK 4: TESTING, DEPLOYMENT & PRODUCTION
+**Duration**: 5 Days (Days 16-20)  
+**Focus**: Testing Strategy, Docker Configuration, CI/CD, Production Readiness  
+**Total Hours**: 40 hours
+
+### Day 11: Comprehensive Testing Strategy
+**Duration**: 8 hours  
+**Learning Objectives**:
+- Implement comprehensive testing strategy
+- Use JUnit 5, Mockito, and Testcontainers
+- Achieve high test coverage
+
+**Exercises**:
+1. **Morning (4 hours):**
+   - Set up JUnit 5 and Mockito
+   - Create unit tests for all services
+   - Implement integration tests for repositories
+   - Add controller tests with MockMvc
+
+2. **Afternoon (4 hours):**
+   - Set up Testcontainers for database testing
+   - Create end-to-end integration tests
+   - Add performance and load tests
+   - Achieve minimum 80% test coverage
+
+**Deliverables**:
+- [ ] Comprehensive test suite implemented
+- [ ] Test coverage above 80%
+- [ ] All tests passing
+
+**GitHub Check**: Testing suite complete and passing
+
+
+---
+
+### Day 12: Database Seeding & Test Data
+**Duration**: 8 hours  
+**Learning Objectives**:
+- Create test data seeding scripts
+- Implement data factories for testing
+- Set up realistic test scenarios
+
+**Exercises**:
+1. **Morning (4 hours):**
+   - Create DataLoader component for initial data
+   - Implement test data factories for all entities
+   - Create seed scripts for different environments
+   - Generate sample users, projects, and tasks
+
+2. **Afternoon (4 hours):**
+   - Add data validation and integrity checks
+   - Create performance test data (large datasets)
+   - Implement data export/import functionality
+   - Test seeding process and data integrity
+
+**Deliverables**:
+- [ ] Data seeding system implemented
+- [ ] Test data factories created
+- [ ] Sample data for development and testing
+
+**GitHub Check**: Test data system functional
+---
+
+### Day 13: Docker Configuration & Containerization
+**Duration**: 8 hours  
+**Learning Objectives**:
+- Create Docker containers for the application
+- Configure multi-stage builds
+- Set up container orchestration
+
+**Exercises**:
+1. **Morning (4 hours):**
+   - Create Dockerfile for Spring Boot application
+   - Implement multi-stage builds for optimization
+   - Configure environment variables and secrets
+   - Create .dockerignore file
+
+2. **Afternoon (4 hours):**
+   - Create docker-compose.yml for full stack
+   - Set up PostgreSQL and MongoDB containers
+   - Configure networking between containers
+   - Test containerized application locally
+
+**Deliverables**:
+- [ ] Docker configuration complete
+- [ ] Multi-stage builds optimized
+- [ ] Docker Compose setup working
+
+**GitHub Check**: Docker containers working locally
+
+
+---
+
+### Day 14: CI/CD Pipeline & GitHub Actions
+**Duration**: 8 hours  
+**Learning Objectives**:
+- Set up GitHub Actions CI/CD pipeline
+- Implement automated testing and deployment
+- Configure environment-specific deployments
+
+**Exercises**:
+1. **Morning (4 hours):**
+   - Create GitHub Actions workflow file
+   - Set up automated build and test pipeline
+   - Configure SonarQube for code quality
+   - Add security scanning with SAST tools
+
+2. **Afternoon (4 hours):**
+   - Implement deployment to staging environment
+   - Configure Docker image publishing
+   - Add automated deployment to production
+   - Set up monitoring and rollback strategies
+
+**Deliverables**:
+- [ ] CI/CD pipeline functional
+- [ ] Automated testing and deployment
+- [ ] Code quality gates implemented
+
+**GitHub Check**: CI/CD workflow passing
+
+---
+
+### Day 15: Authentication & Authorization Setup (Optional)
+**Duration**: 8 hours  
+**Learning Objectives**:
+- Set up Spring Security configuration
+- Implement JWT authentication
+- Create security filters and handlers
+
+**Exercises**:
+1. **Morning (4 hours):**
+   - Configure Spring Security for JWT-based authentication
+   - Create JwtUtil class for token generation and validation
+   - Implement JwtAuthenticationFilter
+   - Create AuthenticationService and UserDetailsService
+
+2. **Afternoon (4 hours):**
+   - Configure security settings in SecurityConfig
+   - Create login and registration endpoints
+   - Implement password encoding using BCrypt
+   - Add security tests and validation
+
+**Deliverables**:
+- [ ] JWT authentication implemented
+- [ ] Security configuration complete
+- [ ] Login/registration endpoints working
+- [ ] Security tests passing
+
+**GitHub Check**: Authentication flow functional
+
+---
+
+### Day 16: Service Layer - User & Authentication Services
+**Duration**: 8 hours  
+**Learning Objectives**:
+- Implement service layer pattern
+- Create business logic for user management
+- Implement proper service interfaces and implementations
+
+**Exercises**:
+1. **Morning (4 hours):**
+   - Create UserService interface
+   - Implement UserServiceImpl with methods:
+     - createUser(UserCreateDTO dto)
+     - getUserById(Long id)
+     - getUserByUsername(String username)
+     - updateUser(Long id, UserUpdateDTO dto)
+
+2. **Afternoon (4 hours):**
+   - Implement remaining UserService methods:
+     - deleteUser(Long id)
+     - getAllUsers()
+   - Create AuthenticationService implementation
+   - Add business validation logic
+   - Create comprehensive unit tests for UserService
+
+**Deliverables**:
+- [ ] UserService fully implemented
+- [ ] Unit tests covering all methods
+- [ ] Service layer following best practices
+
+**GitHub Check**: UserService with tests, compilation successful
+
+---
+
+### Day XX: Caching, Monitoring & Actuator
 **Duration**: 8 hours  
 **Learning Objectives**:
 - Implement caching strategies
@@ -359,127 +545,6 @@
 - ✅ REST controllers complete
 - ✅ Caching and monitoring functional
 - ✅ Performance optimizations verified
-
----
-
-## 📋 WEEK 4: TESTING, DEPLOYMENT & PRODUCTION
-**Duration**: 5 Days (Days 16-20)  
-**Focus**: Testing Strategy, Docker Configuration, CI/CD, Production Readiness  
-**Total Hours**: 40 hours
-
-### Day 16: Comprehensive Testing Strategy
-**Duration**: 8 hours  
-**Learning Objectives**:
-- Implement comprehensive testing strategy
-- Use JUnit 5, Mockito, and Testcontainers
-- Achieve high test coverage
-
-**Exercises**:
-1. **Morning (4 hours):**
-   - Set up JUnit 5 and Mockito
-   - Create unit tests for all services
-   - Implement integration tests for repositories
-   - Add controller tests with MockMvc
-
-2. **Afternoon (4 hours):**
-   - Set up Testcontainers for database testing
-   - Create end-to-end integration tests
-   - Add performance and load tests
-   - Achieve minimum 80% test coverage
-
-**Deliverables**:
-- [ ] Comprehensive test suite implemented
-- [ ] Test coverage above 80%
-- [ ] All tests passing
-
-**GitHub Check**: Testing suite complete and passing
-
----
-
-### Day 17: Docker Configuration & Containerization
-**Duration**: 8 hours  
-**Learning Objectives**:
-- Create Docker containers for the application
-- Configure multi-stage builds
-- Set up container orchestration
-
-**Exercises**:
-1. **Morning (4 hours):**
-   - Create Dockerfile for Spring Boot application
-   - Implement multi-stage builds for optimization
-   - Configure environment variables and secrets
-   - Create .dockerignore file
-
-2. **Afternoon (4 hours):**
-   - Create docker-compose.yml for full stack
-   - Set up PostgreSQL and MongoDB containers
-   - Configure networking between containers
-   - Test containerized application locally
-
-**Deliverables**:
-- [ ] Docker configuration complete
-- [ ] Multi-stage builds optimized
-- [ ] Docker Compose setup working
-
-**GitHub Check**: Docker containers working locally
-
----
-
-### Day 18: Database Seeding & Test Data
-**Duration**: 8 hours  
-**Learning Objectives**:
-- Create test data seeding scripts
-- Implement data factories for testing
-- Set up realistic test scenarios
-
-**Exercises**:
-1. **Morning (4 hours):**
-   - Create DataLoader component for initial data
-   - Implement test data factories for all entities
-   - Create seed scripts for different environments
-   - Generate sample users, projects, and tasks
-
-2. **Afternoon (4 hours):**
-   - Add data validation and integrity checks
-   - Create performance test data (large datasets)
-   - Implement data export/import functionality
-   - Test seeding process and data integrity
-
-**Deliverables**:
-- [ ] Data seeding system implemented
-- [ ] Test data factories created
-- [ ] Sample data for development and testing
-
-**GitHub Check**: Test data system functional
-
----
-
-### Day 19: CI/CD Pipeline & GitHub Actions
-**Duration**: 8 hours  
-**Learning Objectives**:
-- Set up GitHub Actions CI/CD pipeline
-- Implement automated testing and deployment
-- Configure environment-specific deployments
-
-**Exercises**:
-1. **Morning (4 hours):**
-   - Create GitHub Actions workflow file
-   - Set up automated build and test pipeline
-   - Configure SonarQube for code quality
-   - Add security scanning with SAST tools
-
-2. **Afternoon (4 hours):**
-   - Implement deployment to staging environment
-   - Configure Docker image publishing
-   - Add automated deployment to production
-   - Set up monitoring and rollback strategies
-
-**Deliverables**:
-- [ ] CI/CD pipeline functional
-- [ ] Automated testing and deployment
-- [ ] Code quality gates implemented
-
-**GitHub Check**: CI/CD workflow passing
 
 ---
 
