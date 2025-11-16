@@ -1,21 +1,18 @@
 package com.example.demo.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-@RestController
+@Controller
 public class RootController {
 
     @GetMapping("/")
-    public ResponseEntity<Map<String, Object>> getRoot() {
-        return ResponseEntity.ok(Map.of(
-            "message", "Training Reference API is running",
-            "status", "healthy",
-            "timestamp", System.currentTimeMillis()
-        ));
+    public String getRoot() {
+        // Spring Boot will automatically serve index.html from static resources
+        return "forward:/index.html";
     }
     
     @GetMapping("/health")

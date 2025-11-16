@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Reference API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4CAF50;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .endpoints {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .endpoints h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .endpoint-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .endpoint {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: #667eea;
+            color: white;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .path {
+            font-family: 'Courier New', monospace;
+            color: #495057;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: white;
+            opacity: 0.8;
+            margin-top: auto;
+        }
+
+        .api-link {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .api-link:hover {
+            background: #45a049;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Training Reference API</h1>
+            <p>A comprehensive Spring Boot REST API for project management</p>
+        </div>
+
+        <div class="status-card">
+            <span class="status-indicator"></span>
+            <strong>API Status: Running</strong>
+            <p>Your Training Reference API is successfully deployed and ready to use!</p>
+            <a href="/health" class="api-link">Check API Health</a>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <h3>🔐 Authentication</h3>
+                <p>JWT-based authentication with role-based access control</p>
+            </div>
+            <div class="feature-card">
+                <h3>📊 Project Management</h3>
+                <p>Complete CRUD operations for projects, tasks, and comments</p>
+            </div>
+            <div class="feature-card">
+                <h3>📚 Documentation</h3>
+                <p>Interactive API documentation with Swagger UI</p>
+            </div>
+        </div>
+
+        <div class="endpoints">
+            <h2>📋 Available Endpoints</h2>
+            <div class="endpoint-list">
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="path">/api/auth/**</span>
+                    <span class="description">- Authentication endpoints</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="path">/api/projects</span>
+                    <span class="description">- Get all projects</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="path">/api/tasks</span>
+                    <span class="description">- Get all tasks</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="path">/api/users</span>
+                    <span class="description">- User management</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="path">/swagger-ui.html</span>
+                    <span class="description">- API Documentation</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method">GET</span>
+                    <span class="path">/health</span>
+                    <span class="description">- Health check endpoint</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Built with Spring Boot • Deployed on Render • Managed with GitHub Actions</p>
+        <p>© 2025 Training Reference API</p>
+    </div>
+
+    <script>
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusIndicator = document.querySelector('.status-indicator');
+            
+            // Check API health status
+            fetch('/health')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'UP') {
+                        statusIndicator.style.background = '#4CAF50';
+                    } else {
+                        statusIndicator.style.background = '#f44336';
+                    }
+                })
+                .catch(() => {
+                    statusIndicator.style.background = '#ff9800';
+                });
+        });
+    </script>
+</body>
+</html>
