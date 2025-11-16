@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
-                .requestMatchers("/", "/health", "/favicon.ico").permitAll()
+                .requestMatchers("/", "/health", "/favicon.ico", "/index.html", "/static/**", "/css/**", "/js/**", "/images/**").permitAll()
                 
                 // User management endpoints
                 .requestMatchers(HttpMethod.GET, "/api/users/profile").authenticated()
