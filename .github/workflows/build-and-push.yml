@@ -108,5 +108,16 @@ jobs:
       env:
         RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
       run: |
-        curl -X POST "https://api.render.com/v1/services/srv-d4cf92q4d50c73d5mhkg/deploys" \
-          -H "Authorization: Bearer $RENDER_API_KEY"
+        try {
+          Write-Host "Starting deployment to Render..."
+          $headers = @{
+            "Authorization" = "Bearer $env:RENDER_API_KEY"
+            "Content-Type" = "application/json"
+          }
+          $response = Invoke-RestMethod -Uri "https://api.render.com/v1/services/srv-d4cf92q4d50c73d5mhkg/deploys" -Method POST -Headers $headers
+          Write-Host "Deployment triggered successfully: $($response | ConvertTo-Json -Depth 3)"
+        } catch {
+          Write-Error "Failed to trigger deployment: $($_.Exception.Message)"
+          Write-Host "Response: $($_.Exception.Response)"
+          exit 1
+        }
