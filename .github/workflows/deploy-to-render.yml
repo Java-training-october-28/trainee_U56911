@@ -14,31 +14,18 @@ on:
         - production
 
 jobs:
-  build-and-deploy:
-    name: Build and Deploy to Render
+  deploy:
+    name: Deploy to Render
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
-        
-    - name: Build and test with Maven
-      run: mvn clean test --batch-mode --fail-at-end
-      
     - name: Deploy to Render
       env:
         RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
       run: |
-        echo "Starting deployment to Render..."
+        echo "Triggering deployment on Render..."
         curl -X POST "https://api.render.com/v1/services/srv-d4cf92q4d50c73d5mhkg/deploys" \
           -H "Authorization: Bearer $RENDER_API_KEY" \
           -H "Content-Type: application/json" \
           --fail
-        echo "Deployment triggered successfully"
+        echo "Deployment triggered successfully - Render will use the latest Docker image from GHCR"
