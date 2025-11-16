@@ -25,7 +25,7 @@ env:
 jobs:
   test:
     name: Test Application
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     
     permissions:
       contents: read
@@ -56,7 +56,7 @@ jobs:
 
   build-and-push:
     name: Build and Push Docker Image
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: test
     if: github.event_name != 'pull_request'
     
@@ -108,16 +108,9 @@ jobs:
       env:
         RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
       run: |
-        try {
-          Write-Host "Starting deployment to Render..."
-          $headers = @{
-            "Authorization" = "Bearer $env:RENDER_API_KEY"
-            "Content-Type" = "application/json"
-          }
-          $response = Invoke-RestMethod -Uri "https://api.render.com/v1/services/srv-d4cf92q4d50c73d5mhkg/deploys" -Method POST -Headers $headers
-          Write-Host "Deployment triggered successfully: $($response | ConvertTo-Json -Depth 3)"
-        } catch {
-          Write-Error "Failed to trigger deployment: $($_.Exception.Message)"
-          Write-Host "Response: $($_.Exception.Response)"
-          exit 1
-        }
+        echo "Starting deployment to Render..."
+        curl -X POST "https://api.render.com/v1/services/srv-d4cf92q4d50c73d5mhkg/deploys" \
+          -H "Authorization: Bearer $RENDER_API_KEY" \
+          -H "Content-Type: application/json" \
+          --fail
+        echo "Deployment triggered successfully"
