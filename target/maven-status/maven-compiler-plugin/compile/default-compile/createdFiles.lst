@@ -19,7 +19,6 @@ com\example\demo\dto\response\ApiResponse.class
 com\example\demo\exception\handler\GlobalExceptionHandler.class
 com\example\demo\entity\Project.class
 com\example\demo\config\DatabaseIndexConfig.class
-com\example\demo\controller\AuthController.class
 com\example\demo\service\CommentService.class
 com\example\demo\service\ProjectServiceInterface.class
 com\example\demo\entity\Role.class
@@ -33,7 +32,6 @@ com\example\demo\mapper\CommentMapper.class
 com\example\demo\dto\CommentDTO.class
 com\example\demo\dto\CommentCreateDTO.class
 com\example\demo\dto\TaskDTO.class
-com\example\demo\config\SecurityConfig.class
 com\example\demo\mapper\TaskMapper.class
 com\example\demo\controller\ProjectController.class
 com\example\demo\mapper\TaskMapper$1.class
@@ -47,7 +45,6 @@ com\example\demo\mapper\UserMapperImpl.class
 com\example\demo\mapper\CommentMapperImpl.class
 com\example\demo\repository\UserRepository.class
 com\example\demo\dto\TaskUpdateDTO.class
-com\example\demo\config\JwtAuthenticationFilter.class
 com\example\demo\dto\ProjectUpdateDTO.class
 com\example\demo\exception\ResourceNotFoundException.class
 com\example\demo\dto\auth\AuthLogoutDTO.class

@@ -23,6 +23,10 @@ public class ResourceAlreadyExistsException extends BaseException {
         return new ResourceAlreadyExistsException("User", "email", email);
     }
     
+    public static ResourceAlreadyExistsException userUsername(String username) {
+        return new ResourceAlreadyExistsException("User", "username", username);
+    }
+    
     public static ResourceAlreadyExistsException projectName(String name) {
         return new ResourceAlreadyExistsException("Project", "name", name);
     }

@@ -71,9 +71,9 @@ public class AuthController {
     public ResponseEntity<ApiResponse<Void>> logoutFromAllDevices(@RequestHeader("Authorization") String authHeader) {
         // Extract user ID from access token
         String accessToken = authHeader.substring(7); // Remove "Bearer " prefix
-        Long userId = authService.getUserFromAccessToken(accessToken).getId();
+        Long userId = authService.getUserIdFromToken(accessToken);
         
-        authService.logoutFromAllDevices(userId);
+        authService.logoutAllDevices(userId);
         ApiResponse<Void> response = ApiResponse.success(null, "Logged out from all devices successfully");
         return ResponseEntity.ok(response);
     }
@@ -88,7 +88,7 @@ public class AuthController {
             String accessToken = authHeader.substring(7); // Remove "Bearer " prefix
             
             if (authService.validateAccessToken(accessToken)) {
-                var user = authService.getUserFromAccessToken(accessToken);
+                var user = authService.getUserFromToken(accessToken);
                 if (user != null) {
                     AuthValidationDTO validation = new AuthValidationDTO(
                         true, user.getEmail(), user.getRole().name(), user.getId(), "Token is valid"
