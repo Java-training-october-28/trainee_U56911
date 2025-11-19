@@ -8,9 +8,14 @@ import com.example.demo.exception.BusinessException;
 import com.example.demo.exception.ResourceAlreadyExistsException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.mapper.UserMapper;
+import com.google.common.util.concurrent.RateLimiter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.Duration;
+import java.util.Map;
 
 @Service
 public class AuthService {
@@ -30,132 +35,219 @@ public class AuthService {
     @Autowired
     private DatabaseTokenStoreService databaseTokenStoreService;
     
+    // Rate limiting: 5 login attempts per minute per email
+    private final RateLimiter loginRateLimiter = RateLimiter.create(5.0 / 60.0);
+    
+    @Value("${app.max.failed.attempts:5}")
+    private int maxFailedAttempts;
+    
+    @Value("${app.account.lockout.duration:900}") // 15 minutes in seconds
+    private int accountLockoutDuration;
+    
     /**
-     * Register a new user
+     * Register a new user with proper security measures
      */
     public AuthResponseDTO register(AuthRegisterDTO registerDTO) {
-        // Check if user already exists
+        // 1. Check if user already exists
         if (userService.existsByEmail(registerDTO.getEmail())) {
             throw ResourceAlreadyExistsException.userEmail(registerDTO.getEmail());
         }
         
-        // Create user entity
+        // 2. Create user entity with encoded password
         User user = new User();
         user.setUsername(registerDTO.getUsername());
         user.setEmail(registerDTO.getEmail());
         user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
         user.setRole(registerDTO.getRole());
+        user.setFailedLoginAttempts(0); // Initialize failed attempts counter
+        user.setAccountLocked(false);
         
-        // Save user
+        // 3. Save user
         User savedUser = userService.save(user);
         UserDTO userDTO = userMapper.toDTO(savedUser);
         
-        // Generate JWT tokens
+        // 4. Generate JWT tokens
         String accessToken = jwtService.generateAccessToken(savedUser);
         String refreshToken = jwtService.generateRefreshToken(savedUser);
         
-        // Store refresh token in database
+        // 5. Store refresh token for validation
         databaseTokenStoreService.storeRefreshToken(savedUser.getId(), refreshToken);
         
         return new AuthResponseDTO(accessToken, refreshToken, userDTO);
     }
     
     /**
-     * Login user
+     * Login user with security measures and rate limiting
      */
     public AuthResponseDTO login(AuthLoginDTO loginDTO) {
-        // Find user by email
+        // 1. Check rate limiting
+        if (!loginRateLimiter.tryAcquire()) {
+            throw new BusinessException("Too many login attempts. Please try again later.");
+        }
+        
+        // 2. Find user by email
         User user = userService.findByEmail(loginDTO.getEmail());
-        if (user == null) {
+        
+        // 3. Validate credentials
+        if (user == null || !passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+            // Log failed attempt
+            if (user != null) {
+                incrementFailedLoginAttempts(user);
+            }
             throw new BusinessException("Invalid email or password");
         }
         
-        // Check password
-        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
-            throw new BusinessException("Invalid email or password");
+        // 4. Check if account is locked
+        if (user.getFailedLoginAttempts() >= maxFailedAttempts) {
+            throw new BusinessException("Account is temporarily locked due to too many failed attempts. Please try again later.");
         }
         
-        UserDTO userDTO = userMapper.toDTO(user);
+        // 5. Reset failed attempts on successful login
+        resetFailedLoginAttempts(user);
         
-        // Generate tokens
+        // 6. Generate JWT tokens
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
         
-        // Store refresh token in database
+        // 7. Store refresh token
         databaseTokenStoreService.storeRefreshToken(user.getId(), refreshToken);
         
+        UserDTO userDTO = userMapper.toDTO(user);
         return new AuthResponseDTO(accessToken, refreshToken, userDTO);
     }
     
     /**
-     * Refresh access token
+     * Refresh access token with proper validation
      */
     public AuthResponseDTO refreshToken(AuthRefreshDTO refreshDTO) {
-        String refreshToken = refreshDTO.getRefreshToken();
-        
-        // Validate refresh token and get user ID from database
-        Long userId = databaseTokenStoreService.validateRefreshToken(refreshToken);
-        if (userId == null) {
-            throw new BusinessException("Invalid or expired refresh token");
-        }
-        
-        // Get user details
-        User user = userService.findById(userId);
-        if (user == null) {
-            throw new ResourceNotFoundException("User not found");
-        }
-        
-        // Validate JWT refresh token structure (optional double-check)
-        if (!jwtService.validateToken(refreshToken)) {
+        // 1. Validate refresh token format
+        if (!jwtService.validateToken(refreshDTO.getRefreshToken())) {
             throw new BusinessException("Invalid refresh token format");
         }
         
-        // Generate new access token
+        // 2. Check if refresh token exists in our store
+        Long userId = databaseTokenStoreService.validateRefreshToken(refreshDTO.getRefreshToken());
+        if (userId == null) {
+            throw new BusinessException("Refresh token not found or expired");
+        }
+        
+        // 3. Get user from token claims
+        String userEmail = jwtService.getUsernameFromToken(refreshDTO.getRefreshToken());
+        User user = userService.findByEmail(userEmail);
+        
+        if (user == null) {
+            throw new ResourceNotFoundException("User not found for refresh token");
+        }
+        
+        // 4. Revoke the old refresh token (prevent reuse)
+        databaseTokenStoreService.revokeRefreshToken(refreshDTO.getRefreshToken());
+
+        // 5. Generate new tokens
         String newAccessToken = jwtService.generateAccessToken(user);
-        
-        // Optionally generate new refresh token (rotate refresh tokens)
         String newRefreshToken = jwtService.generateRefreshToken(user);
-        
-        // Remove old refresh token and store new one
-        databaseTokenStoreService.revokeRefreshToken(refreshToken);
-        databaseTokenStoreService.storeRefreshToken(userId, newRefreshToken);
-        
-        UserDTO userDTO = userMapper.toDTO(user);
+
+        // 6. Store the new refresh token
+        databaseTokenStoreService.storeRefreshToken(user.getId(), newRefreshToken);        UserDTO userDTO = userMapper.toDTO(user);
         return new AuthResponseDTO(newAccessToken, newRefreshToken, userDTO);
     }
     
     /**
-     * Logout user - revoke refresh token
+     * Logout user by revoking refresh token
      */
     public void logout(String refreshToken) {
-        if (refreshToken != null) {
+        if (jwtService.validateToken(refreshToken)) {
             databaseTokenStoreService.revokeRefreshToken(refreshToken);
         }
     }
-    
+
     /**
-     * Logout user from all devices - revoke all refresh tokens
+     * Logout from all devices by revoking all refresh tokens for user
      */
-    public void logoutFromAllDevices(Long userId) {
+    public void logoutAllDevices(Long userId) {
         databaseTokenStoreService.revokeAllRefreshTokensForUser(userId);
-    }
-    
-    /**
-     * Validate access token
+    }    /**
+     * Validate access token for protected endpoints
      */
-    public boolean validateAccessToken(String accessToken) {
+    public Boolean validateAccessToken(String accessToken) {
         return jwtService.validateToken(accessToken);
     }
     
     /**
-     * Get user details from access token
+     * Get user from access token
      */
-    public User getUserFromAccessToken(String accessToken) {
+    public User getUserFromToken(String accessToken) {
+        String userEmail = jwtService.getUsernameFromToken(accessToken);
+        return userService.findByEmail(userEmail);
+    }
+    
+    /**
+     * Get user ID from access token
+     */
+    public Long getUserIdFromToken(String accessToken) {
+        return jwtService.getUserIdFromToken(accessToken);
+    }
+    
+    /**
+     * Get remaining time until access token expires
+     */
+    public Long getAccessTokenExpirationTime(String accessToken) {
+        return jwtService.getTokenExpirationTime(accessToken);
+    }
+    
+    /**
+     * Increment failed login attempts for user
+     */
+    private void incrementFailedLoginAttempts(User user) {
+        int currentAttempts = user.getFailedLoginAttempts() + 1;
+        user.setFailedLoginAttempts(currentAttempts);
+        
+        // Update last failed attempt timestamp if needed
+        userService.save(user);
+    }
+    
+    /**
+     * Reset failed login attempts for user
+     */
+    private void resetFailedLoginAttempts(User user) {
+        if (user.getFailedLoginAttempts() > 0) {
+            user.setFailedLoginAttempts(0);
+            user.setAccountLocked(false);
+            userService.save(user);
+        }
+    }
+    
+    /**
+     * Check if user session is valid (optional method for additional security)
+     */
+    public Boolean isUserSessionValid(Long userId, String accessToken) {
+        // Validate the access token
         if (!jwtService.validateToken(accessToken)) {
-            return null;
+            return false;
         }
         
-        Long userId = jwtService.getUserIdFromToken(accessToken);
-        return userService.findById(userId);
+        // Check if token belongs to the user
+        Long tokenUserId = jwtService.getUserIdFromToken(accessToken);
+        return userId.equals(tokenUserId);
+    }
+    
+    /**
+     * Get user's active refresh token count (for monitoring/analytics)
+     */
+    public Long getUserRefreshTokenCount(Long userId) {
+        return databaseTokenStoreService.getUserRefreshTokenCount(userId);
+    }
+    
+    /**
+     * Generate token with custom claims for special use cases
+     */
+    public String generateCustomToken(User user, Map<String, Object> additionalClaims) {
+        return jwtService.generateTokenWithCustomClaims(user, additionalClaims);
+    }
+    
+    /**
+     * Validate token and return claims (for complex validation scenarios)
+     */
+    public io.jsonwebtoken.Claims getTokenClaims(String token) {
+        return jwtService.getClaimsFromToken(token);
     }
 }
