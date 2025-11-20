@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,6 +72,7 @@ public class UserService implements UserServiceInterface {
      * Get user by ID
      */
     @Override
+    @Cacheable(value = "user", key = "#id")
     @Transactional(readOnly = true)
     public UserDTO getUserById(Long id) {
         User user = userRepository.findById(id)
@@ -80,6 +84,7 @@ public class UserService implements UserServiceInterface {
      * Get user by username
      */
     @Override
+    @Cacheable(value = "user", key = "'username_' + #username")
     @Transactional(readOnly = true)
     public UserDTO getUserByUsername(String username) {
         User user = userRepository.findByUsername(username)
@@ -91,6 +96,7 @@ public class UserService implements UserServiceInterface {
      * Get user by email
      */
     @Override
+    @Cacheable(value = "user", key = "'email_' + #email")
     @Transactional(readOnly = true)
     public UserDTO getUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
@@ -102,6 +108,8 @@ public class UserService implements UserServiceInterface {
      * Update user information
      */
     @Override
+    @CachePut(value = "user", key = "#id")
+    @CacheEvict(value = "users", allEntries = true)
     public UserDTO updateUser(Long id, UserUpdateDTO updateDTO) {
         // Find existing user
         User existingUser = userRepository.findById(id)
@@ -145,6 +153,7 @@ public class UserService implements UserServiceInterface {
      * Delete user by ID
      */
     @Override
+    @CacheEvict(value = {"user", "users"}, allEntries = true)
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
             throw ResourceNotFoundException.user(id);
@@ -156,6 +165,7 @@ public class UserService implements UserServiceInterface {
      * Get all users
      */
     @Override
+    @Cacheable(value = "users", key = "'all'")
     @Transactional(readOnly = true)
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll()
@@ -168,6 +178,7 @@ public class UserService implements UserServiceInterface {
      * Get users by role
      */
     @Override
+    @Cacheable(value = "users", key = "'role_' + #role")
     @Transactional(readOnly = true)
     public List<UserDTO> getUsersByRole(Role role) {
         return userRepository.findByRole(role)
@@ -198,6 +209,7 @@ public class UserService implements UserServiceInterface {
      * Get active users
      */
     @Override
+    @Cacheable(value = "users", key = "'active'")
     @Transactional(readOnly = true)
     public List<UserDTO> getActiveUsers() {
         return userRepository.findActiveUsers()

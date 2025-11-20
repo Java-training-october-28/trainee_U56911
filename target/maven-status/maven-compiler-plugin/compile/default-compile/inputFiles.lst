@@ -3,10 +3,12 @@ S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\e
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\TaskServiceInterface.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\BatchProcessingService.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\TaskPriority.java
+S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\health\CacheHealthIndicator.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\JwtAuthenticationFilter.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\auth\AuthRefreshDTO.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\TaskService.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\auth\AuthRegisterDTO.java
+S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\MetricsConfig.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\mapper\UserMapper.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\User.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\CommentCreateDTO.java
@@ -30,6 +32,7 @@ S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\e
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\ProjectService.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\mapper\CommentMapper.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\SecurityConfig.java
+S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\health\DatabaseHealthIndicator.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\UserServiceInterface.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\TaskController.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\auth\AuthLoginDTO.java

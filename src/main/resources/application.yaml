@@ -35,9 +35,11 @@ spring:
         generate_statistics: true
     open-in-view: false
   
-  # Cache configuration
+  # Cache configuration - Ehcache
   cache:
-    type: simple
+    type: jcache
+    jcache:
+      config: classpath:ehcache.xml
   
 # Token storage configuration - using database only
 app:
@@ -104,12 +106,22 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,env,beans,caches,configprops
       base-path: /actuator
   endpoint:
     health:
       show-details: when-authorized
       show-components: always
+    metrics:
+      enabled: true
+    caches:
+      enabled: true
   health:
     db:
       enabled: true
+  metrics:
+    enable:
+      jvm: true
+      system: true
+      logback: true
+      process: true

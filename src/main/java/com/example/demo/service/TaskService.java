@@ -19,45 +19,59 @@ import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 
 @Service
 @Transactional
 public class TaskService implements TaskServiceInterface {
         // --- Missing methods for TaskController ---
+        @Cacheable(value = "tasks", key = "'filter_' + #assigneeId + '_' + #projectId + '_' + #status + '_' + #priority")
         public List<TaskDTO> getAllTasks(Long assigneeId, Long projectId, String status, String priority) {
             // TODO: Implement filtering logic
             return new java.util.ArrayList<>();
         }
 
+        @CachePut(value = "task", key = "#id")
+        @CacheEvict(value = "tasks", allEntries = true)
         public TaskDTO updateTaskFull(Long id, TaskCreateDTO updateDTO) {
             // TODO: Implement full update logic
             return null;
         }
 
+        @CacheEvict(value = {"task", "tasks"}, allEntries = true)
         public void deleteTask(Long id) {
             // TODO: Implement delete logic
         }
 
+        @Cacheable(value = "tasks", key = "'comments_' + #id")
         public List<CommentDTO> getTaskComments(Long id) {
             // TODO: Implement get comments logic
             return new java.util.ArrayList<>();
         }
 
+        @CacheEvict(value = "tasks", key = "'comments_' + #id")
         public CommentDTO addCommentToTask(Long id, CommentCreateDTO commentCreateDTO) {
             // TODO: Implement add comment logic
             return null;
         }
 
+        @Cacheable(value = "tasks", key = "'assigned_' + #userId")
         public List<TaskDTO> getTasksAssignedToUser(Long userId) {
             // TODO: Implement assigned tasks logic
             return new java.util.ArrayList<>();
         }
 
+        @CachePut(value = "task", key = "#id")
+        @CacheEvict(value = "tasks", allEntries = true)
         public TaskDTO assignTask(Long id, Long assigneeId) {
             // TODO: Implement assign logic
             return null;
         }
 
+        @CachePut(value = "task", key = "#id")
+        @CacheEvict(value = "tasks", allEntries = true)
         public TaskDTO unassignTask(Long id) {
             // TODO: Implement unassign logic
             return null;
@@ -78,6 +92,8 @@ public class TaskService implements TaskServiceInterface {
     /**
      * Update an existing task with partial data from TaskUpdateDTO
      */
+    @CachePut(value = "task", key = "#taskId")
+    @CacheEvict(value = "tasks", allEntries = true)
     public TaskDTO updateTask(Long taskId, TaskUpdateDTO updateDTO) {
         // 1. Get existing task from database
         Task existingTask = taskRepository.findById(taskId)
@@ -114,6 +130,7 @@ public class TaskService implements TaskServiceInterface {
     }
 
     @Override
+    @CacheEvict(value = "tasks", allEntries = true)
     public TaskDTO createTask(TaskCreateDTO createDTO) {
         Task task = taskMapper.toEntity(createDTO);
 
@@ -134,6 +151,7 @@ public class TaskService implements TaskServiceInterface {
     }
 
     @Override
+    @Cacheable(value = "task", key = "#id")
     @Transactional(readOnly = true)
     public TaskDTO getTaskById(Long id) {
         Task task = taskRepository.findById(id)
@@ -142,6 +160,7 @@ public class TaskService implements TaskServiceInterface {
     }
 
     @Override
+    @Cacheable(value = "tasks", key = "'project_' + #projectId")
     @Transactional(readOnly = true)
     public java.util.List<TaskDTO> getTasksByProject(Long projectId) {
         java.util.List<Task> tasks = taskRepository.findByProjectId(projectId);
@@ -149,6 +168,8 @@ public class TaskService implements TaskServiceInterface {
     }
 
     @Override
+    @CachePut(value = "task", key = "#id")
+    @CacheEvict(value = "tasks", allEntries = true)
     public TaskDTO updateTaskStatus(Long id, TaskStatus status) {
         Task task = taskRepository.findById(id)
             .orElseThrow(() -> ResourceNotFoundException.task(id));

@@ -510,81 +510,95 @@
 **GitHub Check**: UserService with tests, compilation successful
 
 ---
-
-### Day 17: Caching, Monitoring & Actuator
+### Day 17: Caching, Monitoring & Actuator (Optional)
 **Duration**: 8 hours  
 **Learning Objectives**:
-- Implement caching strategies
-- Set up monitoring and health checks
-- Configure Spring Boot Actuator
+- Implement caching strategies  
+- Set up monitoring and health checks  
+- Configure Spring Boot Actuator  
 
 **Exercises**:
 1. **Morning (4 hours):**
-   - Implement caching with @Cacheable, @CacheEvict
-   - Configure Redis as cache manager
-   - Add cache invalidation strategies
-   - Test caching performance improvements
+   - Implement caching with @Cacheable, @CacheEvict  
+   - Configure Ehcache as cache manager  
+   - Add cache invalidation strategies  
+   - Test caching performance improvements  
 
 2. **Afternoon (4 hours):**
-   - Configure Spring Boot Actuator endpoints
-   - Set up Micrometer for metrics collection
-   - Implement custom health indicators
-   - Add application monitoring and alerting
-   - Create performance dashboards
+   - Configure Spring Boot Actuator endpoints  
+   - Set up Micrometer for metrics collection  
+   - Implement custom health indicators  
+   - Add application monitoring and alerting  
+   - Create performance dashboards  
 
 **Deliverables**:
-- [ ] Caching system implemented
-- [ ] Monitoring and Actuator configured
-- [ ] Performance metrics collection working
+- [ ] Caching system implemented  
+- [ ] Monitoring and Actuator configured  
+- [ ] Performance metrics collection working  
 
-**GitHub Check**: Caching and monitoring functional
-
-**Week 3 Evaluation Criteria**:
-- ✅ Service layer fully implemented
-- ✅ Advanced JPA features working
-- ✅ REST controllers complete
-- ✅ Caching and monitoring functional
-- ✅ Performance optimizations verified
+**GitHub Check**: Caching and monitoring functional  
 
 ---
 
-### Day 20: Production Readiness & Final Review
+### Day 18: Flyway Database Migrations (Optional)
 **Duration**: 8 hours  
 **Learning Objectives**:
-- Complete production readiness checklist
-- Perform security audit
-- Optimize for production deployment
+- Implement database migrations with Flyway  
+- Version control database schema changes  
+- Handle migration rollback and recovery  
 
 **Exercises**:
 1. **Morning (4 hours):**
-   - Perform security audit and vulnerability scanning
-   - Optimize application for production (JVM tuning, etc.)
-   - Configure logging and error tracking (Sentry, ELK stack)
-   - Set up backup and disaster recovery
+   - Add Flyway dependencies to Gradle  
+   - Configure Flyway in application.yml  
+   - Create `V1__Create_user_table.sql` migration  
+   - Create `V2__Create_project_table.sql` migration  
 
 2. **Afternoon (4 hours):**
-   - Create production deployment documentation
-   - Perform final integration testing
-   - Complete code review and refactoring
-   - Prepare project presentation and demonstration
-   - Final documentation and handover
+   - Create `V3__Create_task_table.sql` migration  
+   - Create `V4__Create_comment_table.sql` migration  
+   - Add foreign key constraints and indexes  
+   - Test migration execution and rollback  
 
 **Deliverables**:
-- [ ] Production-ready application
-- [ ] Security audit completed
-- [ ] Deployment documentation complete
-- [ ] Project ready for demonstration
+- [ ] Flyway configured and working  
+- [ ] All database tables created via migrations  
+- [ ] Foreign key relationships established  
 
-**GitHub Check**: Final integration tests passing
-
-**Week 4 Evaluation Criteria**:
-- ✅ Comprehensive testing strategy implemented
-- ✅ Docker containerization complete
-- ✅ CI/CD pipeline functional
-- ✅ Production readiness verified
-- ✅ Security audit passed
+**GitHub Check**: Migrations executing successfully  
 
 ---
+
+### Day 19: MongoDB Integration & Configuration
+**Duration**: 8 hours  
+**Learning Objectives**:
+- Set up MongoDB for logging and audit trails  
+- Create MongoDB repositories  
+- Integrate with Spring Boot application  
+
+**Exercises**:
+1. **Morning (4 hours):**
+   - Install and configure MongoDB locally  
+   - Add MongoDB dependencies to Gradle  
+   - Configure MongoDB connection in application.yml  
+   - Create `AuditLog` entity for logging user activities  
+
+2. **Afternoon (4 hours):**
+   - Create `MongoRepository` for AuditLog  
+   - Implement audit logging service  
+   - Add audit logging to all controller methods  
+   - Test MongoDB integration and logging  
+
+**Deliverables**:
+- [ ] MongoDB configured and connected  
+- [ ] Audit logging system implemented  
+- [ ] Audit logs being created and stored  
+
+**GitHub Check**: MongoDB integration functional  
+
+
+---
+
 
 ## 📋 FINAL PROJECT DELIVERABLES
 
@@ -607,7 +621,7 @@
 - ✅ JUnit 5 + Mockito + Testcontainers testing
 - ✅ Docker containerization
 - ✅ GitHub Actions CI/CD
-- ✅ Redis caching
+- ✅ ehcache caching
 - ✅ Spring Boot Actuator + Micrometer
 
 ### Code Quality Standards:

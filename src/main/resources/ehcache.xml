@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.ehcache.org/v3"
+        xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.0.xsd">
+
+    <cache alias="users">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.util.List</value-type>
+        <expiry>
+            <ttl unit="minutes">30</ttl>
+        </expiry>
+        <heap unit="entries">1000</heap>
+    </cache>
+
+    <cache alias="user">
+        <key-type>java.lang.Long</key-type>
+        <value-type>com.example.demo.dto.UserDTO</value-type>
+        <expiry>
+            <ttl unit="minutes">15</ttl>
+        </expiry>
+        <heap unit="entries">500</heap>
+    </cache>
+
+    <cache alias="projects">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.util.List</value-type>
+        <expiry>
+            <ttl unit="minutes">20</ttl>
+        </expiry>
+        <heap unit="entries">500</heap>
+    </cache>
+
+    <cache alias="project">
+        <key-type>java.lang.Long</key-type>
+        <value-type>com.example.demo.dto.ProjectDTO</value-type>
+        <expiry>
+            <ttl unit="minutes">10</ttl>
+        </expiry>
+        <heap unit="entries">300</heap>
+    </cache>
+
+    <cache alias="tasks">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.util.List</value-type>
+        <expiry>
+            <ttl unit="minutes">15</ttl>
+        </expiry>
+        <heap unit="entries">800</heap>
+    </cache>
+
+    <cache alias="task">
+        <key-type>java.lang.Long</key-type>
+        <value-type>com.example.demo.dto.TaskDTO</value-type>
+        <expiry>
+            <ttl unit="minutes">10</ttl>
+        </expiry>
+        <heap unit="entries">400</heap>
+    </cache>
+
+    <cache alias="comments">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.util.List</value-type>
+        <expiry>
+            <ttl unit="minutes">25</ttl>
+        </expiry>
+        <heap unit="entries">600</heap>
+    </cache>
+
+    <cache alias="comment">
+        <key-type>java.lang.Long</key-type>
+        <value-type>com.example.demo.dto.CommentDTO</value-type>
+        <expiry>
+            <ttl unit="minutes">15</ttl>
+        </expiry>
+        <heap unit="entries">300</heap>
+    </cache>
+
+</config>

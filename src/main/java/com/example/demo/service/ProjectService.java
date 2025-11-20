@@ -7,6 +7,9 @@ import com.example.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 
 import java.util.List;
 import com.example.demo.exception.ResourceNotFoundException;
@@ -27,6 +30,8 @@ public class ProjectService implements ProjectServiceInterface {
     /**
      * Update existing project with partial data - demonstrates updateEntityFromDTO usage
      */
+    @CachePut(value = "project", key = "#projectId")
+    @CacheEvict(value = "projects", allEntries = true)
     public ProjectDTO updateProject(Long projectId, ProjectUpdateDTO updateDTO) {
         // 1. Get existing project from database
         Project existingProject = projectRepository.findById(projectId)
@@ -56,6 +61,7 @@ public class ProjectService implements ProjectServiceInterface {
     /**
      * Create new project - demonstrates toEntity usage
      */
+    @CacheEvict(value = "projects", allEntries = true)
     public ProjectDTO createProject(ProjectCreateDTO createDTO) {
         // Convert DTO to entity (only maps simple fields)
         Project project = projectMapper.toEntity(createDTO);
@@ -84,6 +90,7 @@ public class ProjectService implements ProjectServiceInterface {
     /**
      * Get project by ID
      */
+    @Cacheable(value = "project", key = "#id")
     @Transactional(readOnly = true)
     public ProjectDTO getProjectById(Long id) {
         Project project = projectRepository.findById(id)
@@ -94,6 +101,7 @@ public class ProjectService implements ProjectServiceInterface {
     /**
      * Get project with tasks
      */
+    @Cacheable(value = "project", key = "'with_tasks_' + #id")
     @Transactional(readOnly = true)
     public ProjectDTO getProjectWithTasks(Long id) {
         Project project = projectRepository.findById(id)
@@ -104,6 +112,7 @@ public class ProjectService implements ProjectServiceInterface {
     /**
      * Get all projects
      */
+    @Cacheable(value = "projects", key = "'all'")
     @Transactional(readOnly = true)
     public List<ProjectDTO> getAllProjects() {
         List<Project> projects = projectRepository.findAll();
@@ -113,6 +122,7 @@ public class ProjectService implements ProjectServiceInterface {
     /**
      * Get all projects for a specific owner
      */
+    @Cacheable(value = "projects", key = "'owner_' + #ownerId")
     @Transactional(readOnly = true)
     public List<ProjectDTO> getProjectsByOwnerId(Long ownerId) {
         List<Project> projects = projectRepository.findByOwnerId(ownerId);
@@ -127,6 +137,7 @@ public class ProjectService implements ProjectServiceInterface {
     /**
      * Delete project
      */
+    @CacheEvict(value = {"project", "projects"}, allEntries = true)
     public void deleteProject(Long projectId) {
         if (!projectRepository.existsById(projectId)) {
             throw ResourceNotFoundException.project(projectId);
