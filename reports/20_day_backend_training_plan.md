@@ -511,7 +511,7 @@
 
 ---
 
-### Day XX: Caching, Monitoring & Actuator
+### Day 17: Caching, Monitoring & Actuator
 **Duration**: 8 hours  
 **Learning Objectives**:
 - Implement caching strategies
