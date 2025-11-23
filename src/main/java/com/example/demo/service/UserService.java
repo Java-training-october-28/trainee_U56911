@@ -43,21 +43,21 @@ public class UserService implements UserServiceInterface {
     @Override
     public UserDTO createUser(UserCreateDTO createDTO) {
         // Validate email uniqueness
-        if (userRepository.existsByEmail(createDTO.getEmail())) {
-            throw ResourceAlreadyExistsException.userEmail(createDTO.getEmail());
+        if (userRepository.existsByEmail(createDTO.email())) {
+            throw ResourceAlreadyExistsException.userEmail(createDTO.email());
         }
         
         // Validate username uniqueness
-        if (userRepository.existsByUsername(createDTO.getUsername())) {
-            throw ResourceAlreadyExistsException.userUsername(createDTO.getUsername());
+        if (userRepository.existsByUsername(createDTO.username())) {
+            throw ResourceAlreadyExistsException.userUsername(createDTO.username());
         }
         
         // Create user entity
         User user = new User();
-        user.setUsername(createDTO.getUsername());
-        user.setEmail(createDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(createDTO.getPassword()));
-        user.setRole(createDTO.getRole());
+        user.setUsername(createDTO.username());
+        user.setEmail(createDTO.email());
+        user.setPassword(passwordEncoder.encode(createDTO.password()));
+        user.setRole(createDTO.role());
         user.setFailedLoginAttempts(0);
         user.setAccountLocked(false);
         

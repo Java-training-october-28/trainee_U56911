@@ -2,34 +2,21 @@ package com.example.demo.dto;
 
 import jakarta.validation.constraints.*;
 
-public class CommentCreateDTO {
-    
+public record CommentCreateDTO(
     @NotBlank(message = "Comment content is required")
-    @Size(min = 1, max = 1000, message = "Comment content must be between 1 and 1000 characters")
-    private String content;
+    @Size(min = 1, max = 500, message = "Comment must be between 1 and 500 characters")
+    String content,
     
     @NotNull(message = "User ID is required")
-    private Long userId;
+    Long userId,
     
     @NotNull(message = "Task ID is required")
-    private Long taskId;
-    
-    // Constructors
-    public CommentCreateDTO() {}
-    
-    public CommentCreateDTO(String content, Long userId, Long taskId) {
-        this.content = content;
-        this.userId = userId;
-        this.taskId = taskId;
+    Long taskId
+) {
+    // Compact constructor for validation
+    public CommentCreateDTO {
+        if (content != null && content.trim().isEmpty()) {
+            throw new IllegalArgumentException("Comment content cannot be blank");
+        }
     }
-    
-    // Getters and Setters
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
-    
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
-    
-    public Long getTaskId() { return taskId; }
-    public void setTaskId(Long taskId) { this.taskId = taskId; }
 }

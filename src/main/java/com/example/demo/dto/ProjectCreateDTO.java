@@ -4,54 +4,30 @@ import com.example.demo.entity.ProjectStatus;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 
-public class ProjectCreateDTO {
-    
+public record ProjectCreateDTO(
     @NotBlank(message = "Project name is required")
     @Size(min = 3, max = 100, message = "Project name must be between 3 and 100 characters")
-    private String name;
+    String name,
     
     @Size(max = 500, message = "Description cannot exceed 500 characters")
-    private String description;
+    String description,
     
-    private LocalDateTime startDate;
+    LocalDateTime startDate,
     
-    private LocalDateTime endDate;
+    LocalDateTime endDate,
     
-    @NotNull(message = "Status is required")
-    private ProjectStatus status; // Use enum instead of String
+    ProjectStatus status,
     
     @NotNull(message = "Owner ID is required")
-    private Long ownerId;
-    
-    // Constructors
-    public ProjectCreateDTO() {}
-    
-    public ProjectCreateDTO(String name, String description, LocalDateTime startDate, 
-                           LocalDateTime endDate, ProjectStatus status, Long ownerId) {
-        this.name = name;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.status = status;
-        this.ownerId = ownerId;
+    Long ownerId
+) {
+    // Compact constructor for validation
+    public ProjectCreateDTO {
+        if (name != null && name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Project name cannot be blank");
+        }
+        if (endDate != null && startDate != null && endDate.isBefore(startDate)) {
+            throw new IllegalArgumentException("End date cannot be before start date");
+        }
     }
-    
-    // Getters and Setters
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    
-    public LocalDateTime getStartDate() { return startDate; }
-    public void setStartDate(LocalDateTime startDate) { this.startDate = startDate; }
-    
-    public LocalDateTime getEndDate() { return endDate; }
-    public void setEndDate(LocalDateTime endDate) { this.endDate = endDate; }
-    
-    public ProjectStatus getStatus() { return status; }
-    public void setStatus(ProjectStatus status) { this.status = status; }
-    
-    public Long getOwnerId() { return ownerId; }
-    public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
 }

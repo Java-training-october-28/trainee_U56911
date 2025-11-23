@@ -540,7 +540,70 @@
 
 ---
 
-### Day 18: Flyway Database Migrations (Optional)
+### Day 18: Java 21 Features Integration & Modernization
+**Duration**: 8 hours  
+**Learning Objectives**:
+- Implement Java 21 language features in the Task Management System
+- Leverage modern Java capabilities for cleaner, more efficient code
+- Apply pattern matching, records, and sealed classes in real-world scenarios
+- Optimize performance with virtual threads and structured concurrency
+
+**Exercises**:
+
+#### 1. Morning (4 hours): Java 21 Language Features Implementation
+
+##### Exercise 1.1: Records for DTOs (1 hour)
+- Convert existing DTO classes to Java records where appropriate
+- Replace UserDTO, ProjectDTO, TaskDTO with record implementations
+- Implement validation in record constructors using compact constructors
+- Update MapStruct mappers to work with records
+
+##### Exercise 1.2: Sealed Classes for Entity Hierarchy (1.5 hours)
+- Create sealed hierarchy for notification types
+- Implement sealed interfaces for service contracts
+- Use sealed classes for different task types
+
+##### Exercise 1.3: Pattern Matching & Switch Expressions (1.5 hours)
+- Replace traditional if-else chains with pattern matching
+- Use switch expressions for status handling
+- Implement pattern matching in service methods
+
+#### 2. Afternoon (4 hours): Advanced Java 21 Features & Performance
+
+##### Exercise 2.1: Virtual Threads for I/O Operations (2 hours)
+- Implement virtual threads for database operations
+- Create async service methods using virtual threads
+- Replace traditional thread pools with virtual threads
+- Test performance improvements
+
+##### Exercise 2.2: Structured Concurrency for Complex Operations (1 hour)
+- Implement structured concurrency for batch operations
+- Create scoped values for request context
+- Handle task dependencies with structured task scopes
+
+##### Exercise 2.3: String Templates & Enhanced APIs (1 hour)
+- Use string templates for SQL queries and logging
+- Implement sequenced collections for ordered operations
+- Leverage new collection methods
+
+**Deliverables**:
+- [ ] All DTOs converted to records with proper validation
+- [ ] Sealed class hierarchy implemented for notifications
+- [ ] Pattern matching and switch expressions applied throughout codebase
+- [ ] Virtual threads implemented for async operations
+- [ ] Structured concurrency used for batch processing
+- [ ] String templates and enhanced APIs utilized
+- [ ] Performance improvements measured and documented
+- [ ] Comprehensive tests for new Java 21 features
+
+**GitHub Check**:
+- Java 21 features integrated into existing codebase
+- All tests passing with new implementations
+- Performance benchmarks showing improvements
+- Code quality maintained or improved
+
+---
+### Day 19: Flyway Database Migrations (Optional)
 **Duration**: 8 hours  
 **Learning Objectives**:
 - Implement database migrations with Flyway  
@@ -569,7 +632,7 @@
 
 ---
 
-### Day 19: MongoDB Integration & Configuration
+### Day 20: MongoDB Integration & Configuration
 **Duration**: 8 hours  
 **Learning Objectives**:
 - Set up MongoDB for logging and audit trails  
@@ -594,11 +657,9 @@
 - [ ] Audit logging system implemented  
 - [ ] Audit logs being created and stored  
 
-**GitHub Check**: MongoDB integration functional  
-
+**GitHub Check**: MongoDB integration functional
 
 ---
-
 
 ## 📋 FINAL PROJECT DELIVERABLES
 

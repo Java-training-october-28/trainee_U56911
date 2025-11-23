@@ -135,14 +135,14 @@ public class TaskService implements TaskServiceInterface {
         Task task = taskMapper.toEntity(createDTO);
 
         // set project
-        Project project = projectRepository.findById(createDTO.getProjectId())
-            .orElseThrow(() -> ResourceNotFoundException.project(createDTO.getProjectId()));
+        Project project = projectRepository.findById(createDTO.projectId())
+            .orElseThrow(() -> ResourceNotFoundException.project(createDTO.projectId()));
         task.setProject(project);
 
         // set assignee if present
-        if (createDTO.getAssigneeId() != null) {
-            User assignee = userRepository.findById(createDTO.getAssigneeId())
-                .orElseThrow(() -> ResourceNotFoundException.user(createDTO.getAssigneeId()));
+        if (createDTO.assigneeId() != null) {
+            User assignee = userRepository.findById(createDTO.assigneeId())
+                .orElseThrow(() -> ResourceNotFoundException.user(createDTO.assigneeId()));
             task.setAssignee(assignee);
         }
 

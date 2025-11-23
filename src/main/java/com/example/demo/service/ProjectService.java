@@ -67,8 +67,8 @@ public class ProjectService implements ProjectServiceInterface {
         Project project = projectMapper.toEntity(createDTO);
         
         // Set owner relationship using ownerId from DTO
-        User owner = userRepository.findById(createDTO.getOwnerId())
-            .orElseThrow(() -> ResourceNotFoundException.user(createDTO.getOwnerId()));
+        User owner = userRepository.findById(createDTO.ownerId())
+            .orElseThrow(() -> ResourceNotFoundException.user(createDTO.ownerId()));
         project.setOwner(owner);
         
         // Save and return DTO
@@ -82,9 +82,16 @@ public class ProjectService implements ProjectServiceInterface {
     @Override
     public ProjectDTO createProject(ProjectCreateDTO createDTO, Long ownerId) {
         if (createDTO == null) throw new IllegalArgumentException("createDTO cannot be null");
-        // ensure ownerId is set on DTO
-        createDTO.setOwnerId(ownerId);
-        return createProject(createDTO);
+        // Create a new DTO with the specified ownerId
+        ProjectCreateDTO updatedDTO = new ProjectCreateDTO(
+            createDTO.name(),
+            createDTO.description(),
+            createDTO.startDate(),
+            createDTO.endDate(),
+            createDTO.status(),
+            ownerId
+        );
+        return createProject(updatedDTO);
     }
     
     /**

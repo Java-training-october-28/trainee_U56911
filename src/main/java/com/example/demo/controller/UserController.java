@@ -43,8 +43,8 @@ public class UserController {
     })
     public ResponseEntity<ApiResponse<UserDTO>> createUser(@Valid @RequestBody UserCreateDTO createDTO) {
         // Check if email already exists
-        if (userService.existsByEmail(createDTO.getEmail())) {
-            throw ResourceAlreadyExistsException.userEmail(createDTO.getEmail());
+        if (userService.existsByEmail(createDTO.email())) {
+            throw ResourceAlreadyExistsException.userEmail(createDTO.email());
         }
         
         User user = userMapper.toEntity(createDTO);

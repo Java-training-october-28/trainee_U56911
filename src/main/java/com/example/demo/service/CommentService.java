@@ -54,9 +54,9 @@ public class CommentService {
         Comment comment = commentMapper.toEntity(commentCreateDTO);
         
         // Validate relationships - these are part of the same transaction
-        User user = userRepository.findById(commentCreateDTO.getUserId())
+        User user = userRepository.findById(commentCreateDTO.userId())
             .orElseThrow(() -> new RuntimeException("User not found"));
-        Task task = taskRepository.findById(commentCreateDTO.getTaskId())
+        Task task = taskRepository.findById(commentCreateDTO.taskId())
             .orElseThrow(() -> new RuntimeException("Task not found"));
         
         comment.setUser(user);
