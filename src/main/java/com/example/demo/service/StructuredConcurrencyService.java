@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.concurrent.StructuredTaskScope;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Service demonstrating Java 21 structured concurrency for complex operations
@@ -39,8 +42,9 @@ public class StructuredConcurrencyService {
      * All subtasks are automatically managed within a scope
      * NOTE: This requires --enable-preview flag to compile
      */
-    /*
     public ProjectDashboardData getProjectDashboardData(Long projectId) {
+        logger.info("Fetching project dashboard data using structured concurrency for project: {}", projectId);
+        
         try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
             // Launch concurrent subtasks
             var projectSubtask = scope.fork(() -> 
@@ -56,6 +60,11 @@ public class StructuredConcurrencyService {
                 calculateProjectStats(projectId)
             );
             
+            // For now, we'll skip team members as the repository method doesn't exist
+            // var teamMembersSubtask = scope.fork(() -> 
+            //     userRepository.findByProjects_Id(projectId)
+            // );
+            
             // Wait for all subtasks to complete or fail
             try {
                 scope.join();           // Wait for all subtasks
@@ -65,32 +74,118 @@ public class StructuredConcurrencyService {
                 Project project = projectSubtask.get();
                 List<Task> tasks = tasksSubtask.get();
                 ProjectStats stats = statsSubtask.get();
+                // List<User> teamMembers = teamMembersSubtask.get();
+                List<User> teamMembers = List.of(); // Empty list for now
                 
-                return new ProjectDashboardData(project, tasks, List.of(), stats);
+                logger.info("Successfully fetched dashboard data for project {}: {} tasks, {} team members", 
+                    projectId, tasks.size(), teamMembers.size());
+                
+                return new ProjectDashboardData(project, tasks, teamMembers, stats);
                 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw new RuntimeException("Dashboard data fetch interrupted", e);
             }
+        } catch (Exception e) {
+            logger.error("Error fetching project dashboard data for project {}: {}", projectId, e.getMessage());
+            throw new RuntimeException("Failed to fetch project dashboard data", e);
         }
     }
-    */
     
     /**
-     * Alternative implementation using CompletableFuture for structured concurrency
-     * This works without preview features
+     * Process multiple tasks concurrently using structured concurrency
+     * Demonstrates ShutdownOnSuccess pattern for first successful result
      */
-    public ProjectDashboardData getProjectDashboardData(Long projectId) {
-        logger.info("Fetching project dashboard data for project: {}", projectId);
+    public TaskProcessingResult processTasksWithTimeout(List<Long> taskIds, long timeoutSeconds) {
+        logger.info("Processing {} tasks with timeout of {} seconds", taskIds.size(), timeoutSeconds);
         
-        // Fetch data sequentially for now (can be enhanced with CompletableFuture)
-        Project project = projectRepository.findById(projectId)
-            .orElseThrow(() -> new RuntimeException("Project not found: " + projectId));
+        try (var scope = new StructuredTaskScope.ShutdownOnSuccess<TaskProcessingResult>()) {
+            // Fork subtasks for each task
+            for (Long taskId : taskIds) {
+                scope.fork(() -> processSingleTask(taskId));
+            }
+            
+            // Wait for first successful result or timeout
+            try {
+                TaskProcessingResult result = scope.joinUntil(
+                    java.time.Instant.now().plusSeconds(timeoutSeconds)
+                ).result();
+                
+                logger.info("Successfully processed task {} within timeout", result.taskId());
+                return result;
+                
+            } catch (TimeoutException e) {
+                logger.warn("Timeout occurred while processing tasks");
+                return new TaskProcessingResult(null, "TIMEOUT", "Processing timeout exceeded");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException("Task processing interrupted", e);
+            }
+        } catch (Exception e) {
+            logger.error("Error processing tasks: {}", e.getMessage());
+            throw new RuntimeException("Failed to process tasks", e);
+        }
+    }
+    
+    /**
+     * Process batch of tasks with structured concurrency and collect all results
+     */
+    public BatchTaskResult processBatchTasks(List<Long> taskIds) {
+        logger.info("Processing batch of {} tasks using structured concurrency", taskIds.size());
         
-        List<Task> tasks = taskRepository.findByProjectId(projectId);
-        ProjectStats stats = calculateProjectStats(projectId);
-        
-        return new ProjectDashboardData(project, tasks, List.of(), stats);
+        try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+            // Fork subtasks for each task
+            var subtasks = taskIds.stream()
+                .map(taskId -> scope.fork(() -> processSingleTask(taskId)))
+                .toList();
+            
+            // Wait for all subtasks to complete
+            try {
+                scope.join();
+                scope.throwIfFailed();
+                
+                // Collect results
+                List<TaskProcessingResult> successfulResults = subtasks.stream()
+                    .map(subtask -> subtask.get())
+                    .filter(result -> "SUCCESS".equals(result.status()))
+                    .toList();
+                
+                int failedCount = taskIds.size() - successfulResults.size();
+                
+                logger.info("Batch processing completed: {} successful, {} failed", 
+                    successfulResults.size(), failedCount);
+                
+                return new BatchTaskResult(successfulResults, failedCount, taskIds.size());
+                
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException("Batch processing interrupted", e);
+            }
+        } catch (Exception e) {
+            logger.error("Error in batch processing: {}", e.getMessage());
+            throw new RuntimeException("Failed to process batch tasks", e);
+        }
+    }
+    
+    /**
+     * Process a single task (simulated processing)
+     */
+    private TaskProcessingResult processSingleTask(Long taskId) {
+        try {
+            // Simulate some processing time
+            Thread.sleep(100 + (long)(Math.random() * 400));
+            
+            // Simulate occasional failures
+            if (Math.random() < 0.1) { // 10% failure rate
+                return new TaskProcessingResult(taskId, "FAILED", "Simulated processing failure");
+            }
+            
+            return new TaskProcessingResult(taskId, "SUCCESS", "Task processed successfully");
+            
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return new TaskProcessingResult(taskId, "INTERRUPTED", "Processing interrupted");
+        }
     }
     
     /**
