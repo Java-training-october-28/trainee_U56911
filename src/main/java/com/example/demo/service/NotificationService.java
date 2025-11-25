@@ -13,29 +13,29 @@ import java.util.stream.Collectors;
 public class NotificationService {
 
     /**
-     * Demonstrates pattern matching with switch expressions
+     * Demonstrates pattern matching with switch expressions and record pattern deconstruction
      * Processes different notification types using modern Java features
      */
     public String processNotification(NotificationType notification) {
-        // Pattern matching with switch expressions
+        // Pattern matching with switch expressions and record pattern deconstruction
         return switch (notification) {
-            case TaskNotification task -> {
-                String message = "Task Notification: " + task.message() + "\n" +
-                                "Task ID: " + task.taskId() + "\n" +
-                                "Priority: " + task.priority();
-                yield message;
+            case TaskNotification(String message, Long taskId, String taskTitle, NotificationPriority priority) -> {
+                String result = "Task Notification: " + message + "\n" +
+                                "Task ID: " + taskId + "\n" +
+                                "Priority: " + priority;
+                yield result;
             }
-            case ProjectNotification project -> {
-                String message = "Project Notification: " + project.message() + "\n" +
-                                "Project: " + project.projectName() + "\n" +
-                                "Priority: " + project.priority();
-                yield message;
+            case ProjectNotification(String message, Long projectId, String projectName, NotificationPriority priority) -> {
+                String result = "Project Notification: " + message + "\n" +
+                                "Project: " + projectName + "\n" +
+                                "Priority: " + priority;
+                yield result;
             }
-            case SystemNotification system -> {
-                String message = "System Notification: " + system.message() + "\n" +
-                                "Component: " + system.systemComponent() + "\n" +
-                                "Priority: " + system.priority();
-                yield message;
+            case SystemNotification(String message, String systemComponent, NotificationPriority priority) -> {
+                String result = "System Notification: " + message + "\n" +
+                                "Component: " + systemComponent + "\n" +
+                                "Priority: " + priority;
+                yield result;
             }
             // No default needed - sealed interface ensures exhaustive coverage
         };
