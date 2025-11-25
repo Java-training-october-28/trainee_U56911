@@ -540,124 +540,128 @@
 
 ---
 
-### Day 18: Java 21 Features Integration & Modernization
-**Duration**: 8 hours  
+### Day 18: Java 21 Language Features Implementation
+**Duration**: 4 hours  
 **Learning Objectives**:
 - Implement Java 21 language features in the Task Management System
 - Leverage modern Java capabilities for cleaner, more efficient code
 - Apply pattern matching, records, and sealed classes in real-world scenarios
-- Optimize performance with virtual threads and structured concurrency
 
 **Exercises**:
 
-#### 1. Morning (4 hours): Java 21 Language Features Implementation
-
-##### Exercise 1.1: Records for DTOs (1 hour)
+#### Exercise 1: Records for DTOs (1 hour)
 - Convert existing DTO classes to Java records where appropriate
 - Replace UserDTO, ProjectDTO, TaskDTO with record implementations
 - Implement validation in record constructors using compact constructors
 - Update MapStruct mappers to work with records
 
-##### Exercise 1.2: Sealed Classes for Entity Hierarchy (1.5 hours)
+#### Exercise 2: Sealed Classes for Entity Hierarchy (1.5 hours)
 - Create sealed hierarchy for notification types
 - Implement sealed interfaces for service contracts
 - Use sealed classes for different task types
 
-##### Exercise 1.3: Pattern Matching & Switch Expressions (1.5 hours)
+#### Exercise 3: Pattern Matching & Switch Expressions (1.5 hours)
 - Replace traditional if-else chains with pattern matching
 - Use switch expressions for status handling
 - Implement pattern matching in service methods
-
-#### 2. Afternoon (4 hours): Advanced Java 21 Features & Performance
-
-##### Exercise 2.1: Virtual Threads for I/O Operations (2 hours)
-- Implement virtual threads for database operations
-- Create async service methods using virtual threads
-- Replace traditional thread pools with virtual threads
-- Test performance improvements
-
-##### Exercise 2.2: Structured Concurrency for Complex Operations (1 hour)
-- Implement structured concurrency for batch operations
-- Create scoped values for request context
-- Handle task dependencies with structured task scopes
-
-##### Exercise 2.3: String Templates & Enhanced APIs (1 hour)
-- Use string templates for SQL queries and logging
-- Implement sequenced collections for ordered operations
-- Leverage new collection methods
 
 **Deliverables**:
 - [ ] All DTOs converted to records with proper validation
 - [ ] Sealed class hierarchy implemented for notifications
 - [ ] Pattern matching and switch expressions applied throughout codebase
+- [ ] Comprehensive tests for Java 21 language features
+
+**GitHub Check**:
+- Java 21 language features integrated into existing codebase
+- All tests passing with new implementations
+- Code quality maintained or improved
+
+---
+### Day 19: Advanced Java 21 Features & Performance
+**Duration**: 4 hours  
+**Learning Objectives**:
+- Optimize performance with virtual threads and structured concurrency
+- Implement advanced Java 21 concurrency patterns
+- Utilize string templates and enhanced collection APIs
+
+**Exercises**:
+
+#### Exercise 1: Virtual Threads for I/O Operations (2 hours)
+- Implement virtual threads for database operations
+- Create async service methods using virtual threads
+- Replace traditional thread pools with virtual threads
+- Test performance improvements
+
+#### Exercise 2: Structured Concurrency for Complex Operations (1 hour)
+- Implement structured concurrency for batch operations
+- Create scoped values for request context
+- Handle task dependencies with structured task scopes
+
+#### Exercise 3: String Templates & Enhanced APIs (1 hour)
+- Use string templates for SQL queries and logging
+- Implement sequenced collections for ordered operations
+- Leverage new collection methods
+
+**Deliverables**:
 - [ ] Virtual threads implemented for async operations
 - [ ] Structured concurrency used for batch processing
 - [ ] String templates and enhanced APIs utilized
 - [ ] Performance improvements measured and documented
-- [ ] Comprehensive tests for new Java 21 features
+- [ ] Comprehensive tests for advanced Java 21 features
 
 **GitHub Check**:
-- Java 21 features integrated into existing codebase
+- Advanced Java 21 features integrated into existing codebase
 - All tests passing with new implementations
 - Performance benchmarks showing improvements
 - Code quality maintained or improved
 
 ---
-### Day 19: Flyway Database Migrations (Optional)
+
+### Day 20: Spring Cloud Integration - Config, LoadBalancer & Eureka
 **Duration**: 8 hours  
 **Learning Objectives**:
-- Implement database migrations with Flyway  
-- Version control database schema changes  
-- Handle migration rollback and recovery  
+- Implement centralized configuration management with Spring Cloud Config
+- Set up client-side load balancing with Spring Cloud LoadBalancer
+- Configure service discovery with Netflix Eureka
+- Integrate all three components into the Task Management System
 
 **Exercises**:
-1. **Morning (4 hours):**
-   - Add Flyway dependencies to Gradle  
-   - Configure Flyway in application.yml  
-   - Create `V1__Create_user_table.sql` migration  
-   - Create `V2__Create_project_table.sql` migration  
+1. **Morning (4 hours): Spring Cloud Config & LoadBalancer**
+   - **Exercise 1.1: Spring Cloud Config Setup (2 hours)**
+     - Create Spring Cloud Config Server with Git backend
+     - Configure environment-specific properties (dev, test, prod)
+     - Set up Task Management System as Config Client
+     - Implement @RefreshScope for dynamic configuration updates
 
-2. **Afternoon (4 hours):**
-   - Create `V3__Create_task_table.sql` migration  
-   - Create `V4__Create_comment_table.sql` migration  
-   - Add foreign key constraints and indexes  
-   - Test migration execution and rollback  
+   - **Exercise 1.2: Spring Cloud LoadBalancer (2 hours)**
+     - Add Spring Cloud LoadBalancer dependencies
+     - Configure @LoadBalanced RestTemplate and WebClient
+     - Implement multiple service instances for load testing
+     - Configure load balancing strategies and health checks
 
-**Deliverables**:
-- [ ] Flyway configured and working  
-- [ ] All database tables created via migrations  
-- [ ] Foreign key relationships established  
+2. **Afternoon (4 hours): Netflix Eureka & Integration**
+   - **Exercise 2.1: Netflix Eureka Setup (2 hours)**
+     - Create Eureka Server application
+     - Register services as Eureka Clients
+     - Implement service discovery and health monitoring
+     - Configure service registration and discovery
 
-**GitHub Check**: Migrations executing successfully  
-
----
-
-### Day 20: MongoDB Integration & Configuration
-**Duration**: 8 hours  
-**Learning Objectives**:
-- Set up MongoDB for logging and audit trails  
-- Create MongoDB repositories  
-- Integrate with Spring Boot application  
-
-**Exercises**:
-1. **Morning (4 hours):**
-   - Install and configure MongoDB locally  
-   - Add MongoDB dependencies to Gradle  
-   - Configure MongoDB connection in application.yml  
-   - Create `AuditLog` entity for logging user activities  
-
-2. **Afternoon (4 hours):**
-   - Create `MongoRepository` for AuditLog  
-   - Implement audit logging service  
-   - Add audit logging to all controller methods  
-   - Test MongoDB integration and logging  
+   - **Exercise 2.2: Integration & Testing (2 hours)**
+     - Test configuration refresh with Config Server
+     - Verify load balancing across Eureka-registered instances
+     - Test service discovery and inter-service communication
+     - Implement retry mechanisms and circuit breakers
 
 **Deliverables**:
-- [ ] MongoDB configured and connected  
-- [ ] Audit logging system implemented  
-- [ ] Audit logs being created and stored  
+- [ ] Spring Cloud Config Server running with Git backend
+- [ ] Task Management System configured as Config Client
+- [ ] Spring Cloud LoadBalancer functional with multiple instances
+- [ ] Eureka server running with service registration
+- [ ] Service discovery working between instances
+- [ ] Dynamic configuration refresh tested
+- [ ] Load balancing and failover mechanisms verified
 
-**GitHub Check**: MongoDB integration functional
+**GitHub Check**: All three Spring Cloud components integrated and functional with the Task Management System
 
 ---
 
