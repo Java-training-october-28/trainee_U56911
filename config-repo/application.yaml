@@ -1,0 +1,51 @@
+# Shared Configuration for all applications
+# This file contains common settings that apply to all services
+
+# Common Spring Boot settings
+spring:
+  main:
+    banner-mode: console
+    allow-circular-references: true
+  
+  # Common cache settings
+  cache:
+    type: jcache
+  
+  # Common JPA settings
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        connection.provider_disables_autocommit: true
+
+# Common Actuator settings
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+      base-path: /actuator
+  endpoint:
+    health:
+      show-components: always
+    info:
+      enabled: true
+
+# Common logging pattern
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Common Eureka settings
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+
+# Common application settings
+app:
+  version: 1.0.0
+  environment: ${spring.profiles.active:default}

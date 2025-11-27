@@ -1,0 +1,82 @@
+# Task Management Service Configuration
+# This file is served by Spring Cloud Config Server
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: task-management-service
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/taskdb
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc.batch_size: 50
+        order_inserts: true
+        order_updates: true
+  
+  cache:
+    type: jcache
+    jcache:
+      config: classpath:ehcache.xml
+
+# Eureka Client Configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+# JWT Configuration
+jwt:
+  secret: mySecretKey123456789012345678901234567890
+  expiration: 86400  # 24 hours in seconds
+  refresh:
+    expiration: 604800  # 7 days in seconds
+
+# Application Security Configuration
+app:
+  max:
+    failed:
+      attempts: 5
+  account:
+    lockout:
+      duration: 900  # 15 minutes in seconds
+
+# Logging configuration
+logging:
+  level:
+    root: INFO
+    "[com.example.demo]": DEBUG
+    "[org.hibernate.SQL]": DEBUG
+  
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  
+  file:
+    name: logs/task-management-service.log
+
+# Actuator configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,env
+  endpoint:
+    health:
+      show-details: when-authorized

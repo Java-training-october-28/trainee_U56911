@@ -20,7 +20,20 @@
     
     <properties>
         <java.version>21</java.version>
+        <spring-cloud.version>2023.0.0</spring-cloud.version>
     </properties>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     
     <dependencies>
         <dependency>
@@ -212,6 +225,25 @@
             <artifactId>awaitility</artifactId>
             <version>4.2.0</version>
             <scope>test</scope>
+        </dependency>
+        
+        <!-- Spring Cloud Dependencies for Day 20 -->
+        <!-- Spring Cloud Config Client for centralized configuration -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+        
+        <!-- Spring Cloud Netflix Eureka Client for service discovery -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        
+        <!-- Spring Cloud LoadBalancer for client-side load balancing -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
     </dependencies>
     

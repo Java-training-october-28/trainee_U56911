@@ -1,0 +1,49 @@
+# Task Management Service - Development Profile Configuration
+
+server:
+  port: 8081  # Different port for development
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:devdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+
+# Development-specific logging
+logging:
+  level:
+    root: DEBUG
+    "[com.example.demo]": TRACE
+    "[org.hibernate.SQL]": DEBUG
+    "[org.hibernate.type.descriptor.sql.BasicBinder]": TRACE
+
+# Development JWT settings
+jwt:
+  secret: devSecretKey123456789012345678901234567890
+  expiration: 3600  # 1 hour for development
+  refresh:
+    expiration: 86400  # 1 day for development
+
+# Development security settings
+app:
+  max:
+    failed:
+      attempts: 10  # More attempts in development
+  account:
+    lockout:
+      duration: 300  # 5 minutes in development

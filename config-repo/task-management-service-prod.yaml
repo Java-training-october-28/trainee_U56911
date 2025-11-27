@@ -1,0 +1,85 @@
+# Task Management Service - Production Profile Configuration
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://production-db:5432/taskdb
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:secure_password}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate  # Never auto-create in production
+    show-sql: false  # Disable SQL logging in production
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc.batch_size: 50
+        order_inserts: true
+        order_updates: true
+        generate_statistics: false  # Disable in production
+
+# Production logging - less verbose
+logging:
+  level:
+    root: WARN
+    "[com.example.demo]": INFO
+    "[org.hibernate.SQL]": WARN
+  
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  
+  file:
+    name: /var/log/task-management-service/app.log
+  
+  logback:
+    rollingpolicy:
+      max-file-size: 50MB
+      total-size-cap: 1GB
+      max-history: 30
+
+# Production JWT settings - use environment variables
+jwt:
+  secret: ${JWT_SECRET:productionSecretKey123456789012345678901234567890}
+  expiration: 3600  # 1 hour for production
+  refresh:
+    expiration: 604800  # 7 days for production
+
+# Production security settings
+app:
+  max:
+    failed:
+      attempts: 3  # Fewer attempts in production
+  account:
+    lockout:
+      duration: 1800  # 30 minutes in production
+
+# Production Eureka settings
+eureka:
+  instance:
+    hostname: ${HOSTNAME:task-service-prod}
+    prefer-ip-address: false
+    metadata-map:
+      zone: production
+      version: 1.0.0
+
+# Production Actuator settings
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: never  # Don't show details in production
+    metrics:
+      enabled: true
