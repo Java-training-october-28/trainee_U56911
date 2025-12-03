@@ -4,6 +4,7 @@ import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.entity.Task;
 import com.example.demo.service.VirtualThreadService;
 import com.example.demo.service.StructuredConcurrencyService;
+import com.example.demo.service.VirtualThreadExecutorDemoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,9 @@ public class ConcurrencyController {
     
     @Autowired
     private StructuredConcurrencyService structuredConcurrencyService;
+    
+    @Autowired
+    private VirtualThreadExecutorDemoService virtualThreadExecutorDemoService;
     
     /**
      * Get tasks by project using virtual threads for async database operations
@@ -223,6 +227,26 @@ public class ConcurrencyController {
         } catch (Exception e) {
             return ResponseEntity.ok(ApiResponse.error(
                 "Failed to demonstrate structured concurrency performance",
+                e.getMessage()
+            ));
+        }
+    }
+    
+    /**
+     * Demonstrate why Executors.newVirtualThreadPerTaskExecutor() returns ExecutorService
+     * Returns comprehensive explanation with live execution results
+     */
+    @GetMapping("/executor/demo")
+    public ResponseEntity<ApiResponse<VirtualThreadExecutorDemoService.ExecutorDemoResult>> demonstrateExecutorService() {
+        try {
+            var demoResult = virtualThreadExecutorDemoService.runDemo();
+            return ResponseEntity.ok(ApiResponse.success(
+                demoResult,
+                "ExecutorService demonstration completed successfully"
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.ok(ApiResponse.error(
+                "Failed to demonstrate ExecutorService capabilities",
                 e.getMessage()
             ));
         }
