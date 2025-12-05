@@ -6,6 +6,8 @@ import com.example.demo.service.VirtualThreadService;
 import com.example.demo.service.StructuredConcurrencyService;
 import com.example.demo.service.VirtualThreadExecutorDemoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +32,14 @@ public class ConcurrencyController {
     
     @Autowired
     private VirtualThreadExecutorDemoService virtualThreadExecutorDemoService;
+
+    private final Counter dashboardRequestCounter;
+
+    public ConcurrencyController(MeterRegistry registry) {
+        this.dashboardRequestCounter = Counter.builder("api.requests.dashboard")
+            .description("Total requests to the structured concurrency dashboard endpoint")
+            .register(registry);
+    }
     
     /**
      * Get tasks by project using virtual threads for async database operations
@@ -132,6 +142,7 @@ public class ConcurrencyController {
      */
     @GetMapping("/structured/project/{projectId}/dashboard")
     public ResponseEntity<ApiResponse<StructuredConcurrencyService.ProjectDashboardData>> getProjectDashboardStructured(@PathVariable Long projectId) {
+        dashboardRequestCounter.increment();
         try {
             var dashboardData = structuredConcurrencyService.getProjectDashboardData(projectId);
             return ResponseEntity.ok(ApiResponse.success(

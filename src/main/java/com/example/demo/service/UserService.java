@@ -153,7 +153,10 @@ public class UserService implements UserServiceInterface {
      * Delete user by ID
      */
     @Override
-    @CacheEvict(value = {"user", "users"}, allEntries = true)
+    @CacheEvict(value = "user", key = "#id") // Evict the specific user by ID
+    // Evict all lists of users, as they are now stale.
+    // Using @Caching to group multiple cache annotations.
+    @CacheEvict(value = "users", allEntries = true)
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
             throw ResourceNotFoundException.user(id);
