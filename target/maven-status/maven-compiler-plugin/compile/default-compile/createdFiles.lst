@@ -9,15 +9,19 @@ com\example\demo\entity\Task.class
 com\example\demo\entity\Project.class
 com\example\demo\config\DatabaseIndexConfig.class
 com\example\demo\controller\AuthController.class
+com\example\demo\controller\CircuitBreakerDemoController.class
 com\example\demo\service\CommentService.class
+com\example\demo\service\VirtualThreadExecutorDemoService.class
 com\example\demo\mapper\ProjectMapperImpl.class
 com\example\demo\service\DatabaseTokenStoreService.class
 com\example\demo\dto\auth\AuthValidationDTO.class
+com\example\demo\config\CloudConfig.class
 com\example\demo\dto\UserUpdateDTO.class
 com\example\demo\dto\CommentDTO.class
 com\example\demo\dto\CommentCreateDTO.class
 com\example\demo\config\SecurityConfig.class
 com\example\demo\mapper\TaskMapper.class
+com\example\demo\service\CircuitBreakerDemoService.class
 com\example\demo\repository\RefreshTokenRepository.class
 com\example\demo\service\UserServiceInterface.class
 com\example\demo\entity\RefreshToken.class
@@ -25,9 +29,11 @@ com\example\demo\entity\User.class
 com\example\demo\controller\CommentController.class
 com\example\demo\mapper\CommentMapperImpl.class
 com\example\demo\entity\SystemNotification.class
+com\example\demo\controller\CloudIntegrationController.class
 com\example\demo\repository\UserRepository.class
 com\example\demo\dto\TaskUpdateDTO.class
 com\example\demo\dto\auth\AuthLogoutDTO.class
+com\example\demo\service\NotificationClientService.class
 com\example\demo\entity\Comment.class
 com\example\demo\controller\UserController.class
 com\example\demo\entity\Priority.class
@@ -63,6 +69,7 @@ com\example\demo\exception\handler\GlobalExceptionHandler.class
 com\example\demo\service\ProjectServiceInterface.class
 com\example\demo\controller\NotificationController.class
 com\example\demo\entity\Role.class
+com\example\demo\service\NotificationClientService$NotificationRequest.class
 com\example\demo\config\LoggingConfig$1.class
 com\example\demo\dto\ProjectCreateDTO.class
 com\example\demo\mapper\CommentMapper.class
@@ -83,6 +90,7 @@ com\example\demo\config\JwtAuthenticationFilter.class
 com\example\demo\dto\ProjectUpdateDTO.class
 com\example\demo\exception\ResourceNotFoundException.class
 com\example\demo\entity\TaskNotification.class
+com\example\demo\service\VirtualThreadExecutorDemoService$ExecutorDemoResult.class
 com\example\demo\entity\TaskStatus.class
 com\example\demo\service\StructuredConcurrencyService$TaskProcessingResult.class
 com\example\demo\dto\auth\AuthRegisterDTO.class

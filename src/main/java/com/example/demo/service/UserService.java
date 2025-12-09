@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Caching;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -153,7 +154,10 @@ public class UserService implements UserServiceInterface {
      * Delete user by ID
      */
     @Override
-    @CacheEvict(value = {"user", "users"}, allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "user", key = "#id"), // Evict the specific user by ID
+        @CacheEvict(value = "users", allEntries = true) // Evict all lists of users, as they are now stale.
+    })
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
             throw ResourceNotFoundException.user(id);

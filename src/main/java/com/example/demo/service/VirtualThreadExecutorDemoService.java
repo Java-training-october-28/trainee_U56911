@@ -104,14 +104,14 @@ public class VirtualThreadExecutorDemoService {
             result.setCompletableFutureIntegration(true);
             
             // ====== WHY NOT JUST EXECUTOR? ======
-            List<String> executorLimitations = Arrays.asList(
+            List<String> executorLimitationsWhyList = Arrays.asList(
                 "No way to get task results",
                 "No way to cancel tasks", 
                 "No way to manage executor lifecycle",
                 "No integration with Future APIs",
                 "No batch operations"
             );
-            result.setExecutorLimitationsWhy(executorLimitations);
+            result.setExecutorLimitationsWhy(executorLimitationsWhyList);
             
             List<String> executorServiceBenefits = Arrays.asList(
                 "Complete task lifecycle management",

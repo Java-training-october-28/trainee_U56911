@@ -4,6 +4,7 @@ import com.example.demo.entity.*;
 import com.example.demo.repository.TaskRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -135,6 +136,7 @@ public class StringTemplateService {
     /**
      * Demonstrates enhanced collection APIs with sequenced collections
      */
+    @Cacheable(value = "taskStatistics", key = "#projectId")
     public Map<String, Object> getTaskStatistics(Long projectId) {
         List<Task> tasks = taskRepository.findByProjectId(projectId);
         

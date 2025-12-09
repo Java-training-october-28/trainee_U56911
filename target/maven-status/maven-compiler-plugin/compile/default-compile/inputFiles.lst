@@ -2,6 +2,7 @@ S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\e
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\UserUpdateDTO.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\TaskServiceInterface.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\BatchProcessingService.java
+S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\CloudIntegrationController.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\TaskPriority.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\health\CacheHealthIndicator.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\JwtAuthenticationFilter.java
@@ -16,6 +17,10 @@ S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\e
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\DashboardController.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\AuthService.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\repository\RefreshTokenRepository.java
+S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\VirtualThreadExecutorDemoService.java
+S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\CloudConfig.java
+S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\CircuitBreakerDemoController.java
+S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\CircuitBreakerDemoService.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\VirtualThreadService.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\repository\TaskRepository.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\exception\handler\GlobalExceptionHandler.java
@@ -76,6 +81,7 @@ S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\e
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\StructuredConcurrencyService.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\mapper\ProjectMapper.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\NotificationController.java
+S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\NotificationClientService.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\AuthController.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\SwaggerConfig.java
 S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\NotificationPriority.java
