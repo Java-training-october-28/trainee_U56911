@@ -1,16 +1,19 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
   application:
     name: task-management-service
   cloud:
     config:
-      enabled: true
-      uri: http://localhost:8888
-      fail-fast: true
-      retry:
-        initial-interval: 1000
-        max-attempts: 6
-        max-interval: 2000
-        multiplier: 1.1
+      enabled: false
+      # uri: http://localhost:8888
+      # fail-fast: true
+      # retry:
+      #   initial-interval: 1000
+      #   max-attempts: 6
+      #   max-interval: 2000
+      #   multiplier: 1.1
   
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -20,9 +23,6 @@ spring:
   h2:
     console:
       enabled: true
-
-  main:
-    allow-circular-references: true
   
   jpa:
     hibernate:
@@ -128,7 +128,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,env,beans,caches,configprops
+        include: health,info,metrics,env,beans,caches,configprops,circuitbreakers
       base-path: /actuator
   endpoint:
     health:
@@ -138,8 +138,12 @@ management:
       enabled: true
     caches:
       enabled: true
+    circuitbreakers:
+      enabled: true
   health:
     db:
+      enabled: true
+    circuitbreakers:
       enabled: true
   metrics:
     enable:
@@ -147,3 +151,76 @@ management:
       system: true
       logback: true
       process: true
+
+# Resilience4j Circuit Breaker Configuration
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+        registerHealthIndicator: true
+      slowCall:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        slowCallRateThreshold: 100
+        slowCallDurationThreshold: 2s
+        registerHealthIndicator: true
+      highThreshold:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 80
+        registerHealthIndicator: true
+      lowThreshold:
+        slidingWindowSize: 5
+        minimumNumberOfCalls: 3
+        permittedNumberOfCallsInHalfOpenState: 2
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 3s
+        failureRateThreshold: 30
+        registerHealthIndicator: true
+    instances:
+      backendA:
+        baseConfig: default
+      backendB:
+        baseConfig: slowCall
+      backendC:
+        baseConfig: highThreshold
+      backendD:
+        baseConfig: lowThreshold
+      backendE:
+        baseConfig: default
+        waitDurationInOpenState: 1s
+        failureRateThreshold: 60
+  retry:
+    configs:
+      default:
+        maxAttempts: 3
+        waitDuration: 500ms
+        retryExceptions:
+          - org.springframework.web.client.HttpServerErrorException
+          - java.io.IOException
+        ignoreExceptions:
+          - com.example.demo.exception.BusinessException
+    instances:
+      retryBackend:
+        baseConfig: default
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 3s
+        cancelRunningFuture: true
+    instances:
+      timeoutBackend:
+        baseConfig: default
