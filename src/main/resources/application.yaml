@@ -70,6 +70,38 @@ app:
     lockout:
       duration: 900  # 15 minutes in seconds
 
+  # Kafka Configuration
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: task-management-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    properties:
+      spring.json.trusted.packages: "*"
+
+  # Spring Cloud Stream Configuration
+  cloud:
+    stream:
+      bindings:
+        taskOutput: # Producer channel
+          destination: task-events
+          content-type: application/json
+          group: task-management-group
+        taskInput: # Consumer channel  
+          destination: task-events
+          content-type: application/json
+          group: task-management-group
+      kafka:
+        binder:
+          brokers: localhost:9092
+          auto-create-topics: true
+          replication-factor: 1
+
 server:
   port: 8080
 
