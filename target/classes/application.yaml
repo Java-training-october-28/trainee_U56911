@@ -6,14 +6,14 @@ spring:
     name: task-management-service
   cloud:
     config:
-      enabled: false
-      # uri: http://localhost:8888
-      # fail-fast: true
-      # retry:
-      #   initial-interval: 1000
-      #   max-attempts: 6
-      #   max-interval: 2000
-      #   multiplier: 1.1
+      enabled: true
+      uri: http://localhost:8888
+      fail-fast: true
+      retry:
+        initial-interval: 1000
+        max-attempts: 6
+        max-interval: 2000
+        multiplier: 1.1
   
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -39,13 +39,14 @@ spring:
         jdbc.batch_versioned_data: true
         # Query optimization
         query.in_clause_parameter_padding: true
-        # Disable second-level cache by default; enable with proper provider later if needed
-        cache.use_second_level_cache: false
-        cache.use_query_cache: false
+        # Enable second-level cache with Ehcache as provider
+        cache.use_second_level_cache: true
+        cache.use_query_cache: true
+        cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
         generate_statistics: true
     open-in-view: false
   
-  # Cache configuration - Ehcache
+  # Cache configuration - Ehcache (enabled with JAXB runtime added)
   cache:
     type: jcache
     jcache:
@@ -69,6 +70,38 @@ app:
   account:
     lockout:
       duration: 900  # 15 minutes in seconds
+
+  # Kafka Configuration
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: task-management-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    properties:
+      spring.json.trusted.packages: "*"
+
+  # Spring Cloud Stream Configuration
+  cloud:
+    stream:
+      bindings:
+        taskOutput: # Producer channel
+          destination: task-events
+          content-type: application/json
+          group: task-management-group
+        taskInput: # Consumer channel  
+          destination: task-events
+          content-type: application/json
+          group: task-management-group
+      kafka:
+        binder:
+          brokers: localhost:9092
+          auto-create-topics: true
+          replication-factor: 1
 
 server:
   port: 8080
