@@ -59,6 +59,8 @@ public class KafkaConfig {
     public ConcurrentKafkaListenerContainerFactory<String, Envelope> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, Envelope> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+        factory.setConcurrency(4);
+        factory.getContainers().forEach(container -> container.setPollTimeout(3000));
         return factory;
     }
 }

@@ -1,6 +1,18 @@
+jwt:
+  # Prefer providing a secret via environment variable JWT_SECRET in production.
+  # Default below is for local/dev only and must be overridden in production.
+  secret: ${JWT_SECRET:changeme}
+
 spring:
   application:
     name: api-gateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Point to your Authorization Server's JWKS endpoint. Example uses a local auth service.
+          # In production use an issuer-uri or a proper JWKS endpoint (e.g. https://auth.example.com/.well-known/jwks.json)
+          jwk-set-uri: http://localhost:8081/.well-known/jwks.json
   cloud:
     config:
       enabled: false
