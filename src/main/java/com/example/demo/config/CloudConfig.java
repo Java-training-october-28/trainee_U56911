@@ -12,7 +12,7 @@ public class CloudConfig {
      * LoadBalanced RestTemplate for service-to-service communication
      * with client-side load balancing
      */
-    @Bean
+    @Bean 
     @LoadBalanced
     public RestTemplate loadBalancedRestTemplate() {
         return new RestTemplate();
