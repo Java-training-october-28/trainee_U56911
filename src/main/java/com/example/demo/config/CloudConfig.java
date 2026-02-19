@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class CloudConfig {
 
-    /**
+    /** 
      * LoadBalanced RestTemplate for service-to-service communication
      * with client-side load balancing
      */
