@@ -57,7 +57,7 @@ public class User {
     @Column(name = "email_verified", nullable = false)
     private Boolean emailVerified = false;
     
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Project> ownedProjects;
     
     @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
