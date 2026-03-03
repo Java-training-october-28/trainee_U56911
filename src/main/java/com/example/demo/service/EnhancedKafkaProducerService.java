@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -131,35 +130,43 @@ public class EnhancedKafkaProducerService {
     // ==================== ADVANCED PRODUCER PATTERNS ====================
     
     /**
-     * Transactional producer example
+     * Transactional producer example using Kafka's native transaction support
      * Demonstrates atomic operations across multiple messages
+     * 
+     * NOTE: This uses executeInTransaction() which handles transactions internally,
+     * so no @Transactional annotation or KafkaTransactionManager bean is needed.
      */
-    @Transactional("kafkaTransactionManager")
     public void sendTransactionalMessages(String topic, KafkaTaskMessageDTO... messages) {
         logger.info("=== TRANSACTIONAL PRODUCER ===");
         logger.info("Starting Kafka transaction for {} messages", messages.length);
         
-        try {
-            // Training: Send multiple messages in a transaction
-            for (int i = 0; i < messages.length; i++) {
-                KafkaTaskMessageDTO message = messages[i];
-                logger.info("Sending transactional message {}/{}: {}", 
-                           i + 1, messages.length, message.getEventType());
-                
-                kafkaTemplate.send(topic, message);
-                
-                // Training: Simulate business logic that might fail
-                if (shouldFailTransaction()) {
-                    throw new RuntimeException("Simulated transaction failure");
+        // Training: Use executeInTransaction for native Kafka transaction support
+        // This handles the transaction lifecycle automatically without needing
+        // a separate KafkaTransactionManager bean
+        kafkaTemplate.executeInTransaction(transactions -> {
+            try {
+                for (int i = 0; i < messages.length; i++) {
+                    KafkaTaskMessageDTO message = messages[i];
+                    logger.info("Sending transactional message {}/{}: {}", 
+                               i + 1, messages.length, message.getEventType());
+                    
+                    // Send within the transaction
+                    transactions.send(topic, message).get();
+                    
+                    // Training: Simulate business logic that might fail
+                    if (shouldFailTransaction()) {
+                        throw new RuntimeException("Simulated transaction failure");
+                    }
                 }
+                
+                logger.info("Transaction completed successfully");
+                return null;
+                
+            } catch (Exception e) {
+                logger.error("Transaction failed, all messages will be rolled back", e);
+                throw new RuntimeException("Transaction failed: " + e.getMessage(), e);
             }
-            
-            logger.info("Transaction completed successfully");
-            
-        } catch (Exception e) {
-            logger.error("Transaction failed, all messages will be rolled back", e);
-            throw e; // This will trigger rollback
-        }
+        });
     }
     
     /**
@@ -478,4 +485,6 @@ public class EnhancedKafkaProducerService {
         logger.info("3. Performance Configuration:");
         logger.info("   - batch.size: Size of batch in bytes");
         logger.info("   - linger.ms: Time to wait for batching");
-        logger.info("   -
+        logger.info("   - buffer.memory: Memory for producer buffering");
+    }
+}
