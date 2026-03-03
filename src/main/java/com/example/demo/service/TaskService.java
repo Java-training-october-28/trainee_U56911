@@ -96,8 +96,7 @@ public class TaskService implements TaskServiceInterface {
     @CacheEvict(value = "tasks", allEntries = true)
     public TaskDTO updateTask(Long taskId, TaskUpdateDTO updateDTO) {
         // 1. Get existing task from database
-        Task existingTask = taskRepository.findById(taskId)
-            .orElseThrow(() -> ResourceNotFoundException.task(taskId));
+        Task existingTask = taskRepository.findById(taskId).orElseThrow(() -> ResourceNotFoundException.task(taskId));
         
         // 2. Use mapper to update simple fields (title, description, status, priority, dueDate)
         // Only non-null fields from updateDTO will be applied due to IGNORE strategy

@@ -16,7 +16,10 @@ public interface UserMapper {
     UserDTO toDTO(User user);
 
     @Named("userDTOWithRelations")
-    @Mapping(target = "ownedProjects", ignore = true)
+    UserDTO toDTOWithRelations(User user);
+
+    @Named("userDTOWithRelations")
+    @Mapping(target = "ownedProjects", qualifiedByName = "basicProjectDTO")
     @Mapping(target = "assignedTasks", ignore = true)
     @Mapping(target = "comments", ignore = true)
     UserDTO toDTOWithRelations(User user);

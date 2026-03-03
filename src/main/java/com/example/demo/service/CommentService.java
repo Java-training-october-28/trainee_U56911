@@ -52,6 +52,7 @@ public class CommentService {
     public CommentDTO createComment(CommentCreateDTO commentCreateDTO) {
         // Use mapper to convert DTO to entity
         Comment comment = commentMapper.toEntity(commentCreateDTO);
+
         
         // Validate relationships - these are part of the same transaction
         User user = userRepository.findById(commentCreateDTO.userId())

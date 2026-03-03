@@ -43,10 +43,6 @@ public class GlobalExceptionHandler {
         
         logger.warn("Resource not found: {}", ex.getMessage());
         
-        ErrorResponse errorResponse = ErrorResponse.notFound(ex.getMessage());
-        errorResponse.setPath(getPath(request));
-        errorResponse.setMethod(getMethod(request));
-        
         ApiResponse<Object> response = ApiResponse.error(ex.getMessage(), getPath(request));
         
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);

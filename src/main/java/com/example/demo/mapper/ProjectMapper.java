@@ -15,7 +15,7 @@ public interface ProjectMapper {
     ProjectDTO toDTO(Project project);
 
     @Named("projectDTOWithTasks")
-    @Mapping(target = "owner", qualifiedByName = "basicUserDTO")
+     @Mapping(target = "tasks", qualifiedByName = "basicTaskDTOList")
     ProjectDTO toDTOWithTasks(Project project);
     
     @Mapping(target = "id", ignore = true)

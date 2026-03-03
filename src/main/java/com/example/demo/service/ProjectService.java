@@ -71,6 +71,8 @@ public class ProjectService implements ProjectServiceInterface {
             .orElseThrow(() -> ResourceNotFoundException.user(createDTO.ownerId()));
         project.setOwner(owner);
         
+        //userRepository.saveAll(List.of(owner)); // Ensure owner is saved (if new) - in real app, this might not be needed
+
         // Save and return DTO
         Project savedProject = projectRepository.save(project);
         return projectMapper.toDTO(savedProject);

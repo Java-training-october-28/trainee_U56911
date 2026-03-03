@@ -32,7 +32,7 @@ public class TemplateController {
             @RequestParam(required = false) TaskPriority priority) {
         
         String query = stringTemplateService.generateTaskSearchQuery(searchTerm, status, priority);
-        
+     
         return ResponseEntity.ok(ApiResponse.success(
             query,
             "Task search query generated using text blocks"

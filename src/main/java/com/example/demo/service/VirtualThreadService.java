@@ -36,7 +36,7 @@ public class VirtualThreadService {
     /**
      * Demonstrates virtual threads for async database operations
      */
-    public CompletableFuture<List<Task>> getTasksByProjectAsync(Long projectId) {
+    public synchronized CompletableFuture<List<Task>> getTasksByProjectAsync(Long projectId) {
         return CompletableFuture.supplyAsync(() -> {
             logger.info("Virtual thread executing database query for project: {}", projectId);
             try {
