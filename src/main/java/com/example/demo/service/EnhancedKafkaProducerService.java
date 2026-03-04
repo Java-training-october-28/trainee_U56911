@@ -1,13 +1,22 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.KafkaTaskMessageDTO;
+import com.example.demo.entity.OutboxMessage;
+import com.example.demo.repository.OutboxRepository;
+import com.example.demo.repository.TaskRepository;
+import com.example.demo.entity.Task;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,9 +42,18 @@ public class EnhancedKafkaProducerService {
     private static final Logger logger = LoggerFactory.getLogger(EnhancedKafkaProducerService.class);
     
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final OutboxRepository outboxRepository;
+    private final ObjectMapper objectMapper;
+    private final TaskRepository taskRepository;
     
-    public EnhancedKafkaProducerService(KafkaTemplate<String, Object> kafkaTemplate) {
+    public EnhancedKafkaProducerService(KafkaTemplate<String, Object> kafkaTemplate,
+                                        OutboxRepository outboxRepository,
+                                        ObjectMapper objectMapper,
+                                        TaskRepository taskRepository) {
         this.kafkaTemplate = kafkaTemplate;
+        this.outboxRepository = outboxRepository;
+        this.objectMapper = objectMapper;
+        this.taskRepository = taskRepository;
     }
     
     // ==================== BASIC PRODUCER PATTERNS ====================
@@ -463,28 +481,308 @@ public class EnhancedKafkaProducerService {
         // In real implementation, would send to monitoring/alerting system
     }
     
-    // ==================== UTILITY METHODS FOR TRAINING ====================
+    // ==================== CHAINED TRANSACTION MANAGER (DB + KAFKA) ====================
+    /**
+     * Simplified example that can run without DB entities
+     * Demonstrates the concept without requiring TaskRepository injection
+     */
+    @Transactional(value = "chainedTransactionManager", rollbackFor = Exception.class)
+    public void processOrderWithChainedTransaction(Long orderId, String orderDetails) {
+        logger.info("=== CHAINED TRANSACTION (DB + KAFKA) ===");
+        logger.info("Starting chained transaction for order: {}", orderId);
+        
+        try {
+            // Simulate DB operation - in real app, use repository
+            logger.info("1. DB Operation: Saving order {} to database", orderId);
+            // orderRepo.save(order);  // Would be here in real implementation
+            
+            // Simulate Kafka operation
+            logger.info("2. Kafka Operation: Sending event for order {}", orderId);
+            KafkaTaskMessageDTO event = new KafkaTaskMessageDTO(
+                "ORDER_CREATED",
+                orderId,
+                orderDetails,
+                "PENDING",
+                1L,
+                "system"
+            );
+            
+            // Send within the same transaction
+            kafkaTemplate.send("orders", orderId.toString(), event).get(10, TimeUnit.SECONDS);
+            logger.info("Kafka message sent for order: {}", orderId);
+            
+            logger.info("Chained transaction completed successfully - both DB and Kafka will commit");
+            
+        } catch (Exception e) {
+            logger.error("Chained transaction failed - both DB and Kafka will be rolled back", e);
+            throw new RuntimeException("Transaction failed: " + e.getMessage(), e);
+        }
+    }
+    
+    // ==================== @TRANSACTIONAL EVENT LISTENER (BETTER APPROACH!) ====================
     
     /**
-     * Demonstrate different producer configurations
+     * 🎯 BETTER APPROACH: @TransactionalEventListener
+     * 
+     * This is the RECOMMENDED approach for DB + Kafka transactions!
+     * 
+     * HOW IT WORKS:
+     * 1. Your service method saves to DB and publishes a Spring event
+     * 2. DB transaction commits successfully
+     * 3. ONLY THEN @TransactionalEventListener fires and sends to Kafka
+     * 4. If DB fails, NO Kafka message is sent (no inconsistency!)
+     * 
+     * ADVANTAGES over ChainedKafkaTransactionManager:
+     * ✅ Cleaner separation of concerns
+     * ✅ Kafka failure doesn't affect DB transaction
+     * ✅ No dual-write problem
+     * ✅ Easier to test and maintain
+     * ✅ Recommended for production systems
      */
-    public void demonstrateProducerConfigurations() {
-        logger.info("=== PRODUCER CONFIGURATION DEMONSTRATION ===");
+    
+    /**
+     * Example: Using @TransactionalEventListener for reliable DB + Kafka
+     * 
+     * Step 1: In your service/repository, save to DB and publish event:
+     * 
+     * @Transactional
+     * public void createTask(Task task) {
+     *     taskRepository.save(task);
+     *     applicationEventPublisher.publishEvent(new TaskCreatedEvent(task));
+     * }
+     * 
+     * Step 2: This listener automatically fires AFTER commit:
+     */
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handleTaskCreatedEvent(TaskCreatedEventForKafka event) {
+        logger.info("=== @TRANSACTIONAL EVENT LISTENER ===");
+        logger.info("DB transaction committed! Now sending Kafka message for: {}", event.getTaskId());
         
-        // Training: Explain different configurations
-        logger.info("1. ACKS Configuration:");
-        logger.info("   - acks=0: Fire and forget (fastest, least reliable)");
-        logger.info("   - acks=1: Leader acknowledgment (balanced)");
-        logger.info("   - acks=all: All replicas acknowledgment (slowest, most reliable)");
+        KafkaTaskMessageDTO message = new KafkaTaskMessageDTO(
+            "TASK_CREATED",
+            event.getTaskId(),
+            event.getTaskTitle(),
+            event.getTaskStatus(),
+            event.getUserId(),
+            event.getUserName()
+        );
         
-        logger.info("2. Retry Configuration:");
-        logger.info("   - retries: Number of retry attempts");
-        logger.info("   - retry.backoff.ms: Delay between retries");
-        logger.info("   - enable.idempotence: Prevent duplicate messages");
+        try {
+            kafkaTemplate.send("task-events", event.getTaskId().toString(), message).get(10, TimeUnit.SECONDS);
+            logger.info("✅ Kafka message sent successfully after DB commit!");
+        } catch (Exception e) {
+            logger.error("❌ Kafka send failed after DB commit - DB is safe!", e);
+            // Kafka failure doesn't affect DB - you can retry separately
+            // This is the key advantage!
+        }
+    }
+    
+    /**
+     * Simple event class for demonstration
+     * In real app, this would be your domain event
+     */
+    public static class TaskCreatedEventForKafka {
+        private final Long taskId;
+        private final String taskTitle;
+        private final String taskStatus;
+        private final Long userId;
+        private final String userName;
         
-        logger.info("3. Performance Configuration:");
-        logger.info("   - batch.size: Size of batch in bytes");
-        logger.info("   - linger.ms: Time to wait for batching");
-        logger.info("   - buffer.memory: Memory for producer buffering");
+        public TaskCreatedEventForKafka(Long taskId, String taskTitle, String taskStatus, 
+                                        Long userId, String userName) {
+            this.taskId = taskId;
+            this.taskTitle = taskTitle;
+            this.taskStatus = taskStatus;
+            this.userId = userId;
+            this.userName = userName;
+        }
+        
+        public Long getTaskId() { return taskId; }
+        public String getTaskTitle() { return taskTitle; }
+        public String getTaskStatus() { return taskStatus; }
+        public Long getUserId() { return userId; }
+        public String getUserName() { return userName; }
+    }
+    
+    /**
+     * Example usage method showing how to use @TransactionalEventListener approach
+     * 
+     * To use this, inject ApplicationEventPublisher in your service:
+     * 
+     * @Transactional
+     * public void createTaskWithKafkaEvent(Task task) {
+     *     // Step 1: Save to DB (normal @Transactional)
+     *     Task saved = taskRepository.save(task);
+     *     
+     *     // Step 2: Publish event (NOT sent to Kafka yet!)
+     *     eventPublisher.publishEvent(new TaskCreatedEventForKafka(
+     *         saved.getId(),
+     *         saved.getTitle(),
+     *         saved.getStatus(),
+     *         saved.getAssignee().getId(),
+     *         saved.getAssignee().getUsername()
+     *     ));
+     *     
+     *     // Step 3: When method returns, DB transaction commits
+     *     // Step 4: @TransactionalEventListener fires AFTER commit, sends to Kafka
+     * }
+     */
+    public void demonstrateTransactionalEventListener() {
+        logger.info("=== DEMONSTRATING @TransactionalEventListener APPROACH ===");
+        logger.info("This approach is BETTER than ChainedKafkaTransactionManager because:");
+        logger.info("1. Kafka message is sent ONLY after DB commit succeeds");
+        logger.info("2. If Kafka fails, DB is NOT affected");
+        logger.info("3. Cleaner separation of concerns");
+        logger.info("4. Recommended for production systems!");
+    }
+    
+    // ==================== OUTBOX PATTERN (MOST RELIABLE!) ====================
+    
+    /**
+     * 🎯 MOST RELIABLE: Outbox Pattern
+     * 
+     * This is the MOST RELIABLE approach for DB + Kafka!
+     * 
+     * HOW IT WORKS:
+     * 1. Save to DB + Save to outbox table in SAME transaction
+     * 2. Transaction commits - both DB and outbox are persisted
+     * 3. Scheduler polls outbox and publishes to Kafka
+     * 4. Mark as published after successful Kafka send
+     * 
+     * ADVANTAGES:
+     * ✅ GUARANTEED consistency - DB and Kafka ALWAYS in sync
+     * ✅ If Kafka fails, message stays in outbox for retry
+     * ✅ No dual-write problem
+     * ✅ Best for critical systems (banking, payments, etc.)
+     * 
+     * COMPONENTS NEEDED:
+     * - OutboxMessage entity (see entity/OutboxMessage.java)
+     * - OutboxRepository (see repository/OutboxRepository.java)
+     * - OutboxScheduler (see service/OutboxScheduler.java)
+     */
+    
+    // To use the Outbox Pattern, inject these in your service:
+    // private final OutboxRepository outboxRepository;
+    // private final ObjectMapper objectMapper;
+    
+    /**
+     * Example: Using Outbox Pattern for reliable DB + Kafka
+     * 
+     * In your service, save to DB and outbox in SAME transaction:
+     */ 
+      @Transactional
+      public void createTaskWithOutbox(Task task) {
+          // Step 1: Save main entity to DB
+          Task saved = taskRepository.save(task);
+          
+          // Step 2: Create Kafka event payload
+          KafkaTaskMessageDTO event = new KafkaTaskMessageDTO(
+              "TASK_CREATED", saved.getId(), saved.getTitle(), 
+              saved.getStatus(), userId, username
+          );
+          
+          // Step 3: Save to outbox table (SAME transaction!)
+          OutboxMessage outbox = new OutboxMessage(
+              "Task",
+              saved.getId().toString(),
+              "TASK_CREATED",
+              objectMapper.writeValueAsString(event)
+         );
+          outboxRepository.save(outbox);
+          
+          // Both save() calls are in same transaction!
+          // When transaction commits, both are persisted
+     }
+
+     /* 
+     * 
+     * Step 4: OutboxScheduler automatically:
+     * - Reads unpublished messages from outbox
+     * - Publishes to Kafka
+     * - Marks as published
+     */
+
+
+    @Transactional
+    public void createTaskWithOutbox(Task task, Long userId, String userName) {
+        logger.info("=== OUTBOX PATTERN: Creating task with outbox ===");
+        
+        // 1. Save main entity to DB
+        Task saved = taskRepository.save(task);
+        logger.info("1. Saved task to database: id={}, title={}", saved.getId(), saved.getTitle());
+
+        // 2. Create Kafka event payload
+        KafkaTaskMessageDTO event = new KafkaTaskMessageDTO(
+            "TASK_CREATED",
+            saved.getId(),
+            saved.getTitle(),
+            saved.getStatus(),
+            userId,
+            userName
+        );
+
+        // 3. Save to outbox table (SAME transaction!)
+        try {
+            OutboxMessage outbox = new OutboxMessage(
+                "Task",
+                saved.getId().toString(),
+                "TASK_CREATED",
+                objectMapper.writeValueAsString(event)
+            );
+            outboxRepository.save(outbox);
+            logger.info("2. Saved to outbox table: aggregateId={}, eventType=TASK_CREATED", saved.getId());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to serialize event", e);
+        }
+
+        // Transaction commits - both task and outbox are saved!
+        // OutboxScheduler will publish to Kafka asynchronously
+        logger.info("✅ Transaction committed! OutboxScheduler will publish to Kafka...");
+    }
+    
+    /**
+     * Demonstrate Outbox Pattern
+     */
+    public void demonstrateOutboxPattern() {
+        logger.info("=== DEMONSTRATING OUTBOX PATTERN ===");
+        logger.info("This is the MOST RELIABLE approach for DB + Kafka:");
+        logger.info("1. Write to DB + Write to outbox in SAME transaction");
+        logger.info("2. Transaction commits - both persisted");
+        logger.info("3. OutboxScheduler polls and publishes to Kafka");
+        logger.info("4. If Kafka fails, message stays in outbox for retry");
+        logger.info("✅ GUARANTEED consistency - Best for critical systems!");
+    }
+    
+    /**
+     * Compare all three approaches
+     */
+    public void compareAllApproaches() {
+        logger.info("=== COMPARING ALL THREE APPROACHES ===");
+        
+        logger.info("");
+        logger.info("1. ChainedKafkaTransactionManager:");
+        logger.info("   ✅ Both operations in same transaction");
+        logger.info("   ❌ If Kafka fails after DB commit, can have issues");
+        logger.info("   ⚠️  Complex rollback scenarios");
+        
+        logger.info("");
+        logger.info("2. @TransactionalEventListener:");
+        logger.info("   ✅ Kafka ONLY after DB commit succeeds");
+        logger.info("   ✅ Kafka failure doesn't affect DB");
+        logger.info("   ✅ Cleaner separation of concerns");
+        logger.info("   ⚠️  Requires async Kafka send");
+        
+        logger.info("");
+        logger.info("3. Outbox Pattern (MOST RELIABLE):");
+        logger.info("   ✅ GUARANTEED consistency");
+        logger.info("   ✅ Kafka failure doesn't affect DB");
+        logger.info("   ✅ Automatic retry via scheduler");
+        logger.info("   ✅ Best for critical systems");
+        logger.info("   ⚠️  Requires additional outbox table");
+        
+        logger.info("");
+        logger.info("RECOMMENDATION:");
+        logger.info("- Simple cases: @TransactionalEventListener");
+        logger.info("- Critical systems: Outbox Pattern");
     }
 }

@@ -342,16 +342,18 @@ public class EnhancedKafkaConsumerService {
     private void handleDeadLetterMessage(KafkaTaskMessageDTO message, String failureReason) {
         logger.warn("Handling dead letter message for task: {}", message.getTaskId());
         logger.warn("Failure reason: {}", failureReason);
-        
-        // Training: DLQ handling strategies
-        // 1. Log for manual intervention
-        // 2. Send alert to monitoring system
-        // 3. Attempt reprocessing after fix
-        // 4. Archive for analysis
-        
+
+        // 2. Save to a DB table for manual review
+        deadLetterRepository.save(new DeadLetterRecord(message, failureReason));
+
+        // 3. Send alert (email, Slack, PagerDuty)
+        alertService.notifyAdmin(message, failureReason);
+
+        // 4. Optionally: try a completely different recovery path
+
         logger.info("DLQ message archived for manual review");
     }
-    
+
     // ==================== HELPER METHODS ====================
     
     private void simulateExternalServiceCall() {
