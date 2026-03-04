@@ -4,11 +4,15 @@ import com.example.demo.dto.KafkaTaskMessageDTO;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.kafka.retrytopic.DltStrategy;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,15 +35,22 @@ public class EnhancedKafkaConsumerService {
     private static final Logger logger = LoggerFactory.getLogger(EnhancedKafkaConsumerService.class);
     private final ExecutorService asyncExecutor = Executors.newFixedThreadPool(5);
     
-    // ==================== TRADITIONAL @KafkaListener APPROACH ====================
+    // ==================== RETRYABLE TOPIC LISTENER (Annotation-based DLQ) ====================
     
     /**
-     * Traditional Kafka Listener with manual acknowledgment
-     * Demonstrates:
-     * - Manual offset commit
-     * - Error handling within listener
-     * - Access to ConsumerRecord metadata
+     * Kafka Listener with @RetryableTopic annotation
+     * DLQ handling moved from config to annotation
+     * 
+     * Retry topics created: task-events-0, task-events-1, task-events-2
+     * DLT topic: task-events.DLQ
      */
+    @RetryableTopic(
+        attempts = "3",
+        backoff = @Backoff(delay = 1000, multiplier = 2),
+        dltTopicSuffix = ".DLQ",
+        dltTopicStrategy = DltStrategy.FAIL_ON_ERROR,
+        include = {RuntimeException.class, Exception.class}
+    )
     @KafkaListener(
         topics = "${spring.kafka.topic.task-events:task-events}",
         groupId = "${spring.kafka.consumer.group-id:task-management-training-group}",
@@ -53,7 +64,7 @@ public class EnhancedKafkaConsumerService {
             @Header(KafkaHeaders.RECEIVED_TIMESTAMP) long timestamp,
             Acknowledgment acknowledgment) {
         
-        logger.info("=== TRADITIONAL LISTENER ===");
+        logger.info("=== RETRYABLE TOPIC LISTENER ===");
         logger.info("Received message from topic: {}, partition: {}, key: {}", topic, partition, key);
         logger.info("Message timestamp: {}, payload: {}", timestamp, message);
         
@@ -67,12 +78,28 @@ public class EnhancedKafkaConsumerService {
             
         } catch (Exception e) {
             logger.error("Failed to process message: {}", message, e);
-            // Training: In real scenario, you might want to:
-            // 1. Send to DLQ manually
-            // 2. Retry with exponential backoff
-            // 3. Alert monitoring system
-            throw e; // Let the container factory error handler deal with it
+            // Throw exception to trigger retry mechanism
+            throw e;
         }
+    }
+    
+    /**
+     * Dead Letter Topic Handler
+     * Called when all retries are exhausted
+     */
+    @DltHandler
+    public void handleDlt(
+            @Payload KafkaTaskMessageDTO message,
+            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+            @Header(KafkaHeaders.EXCEPTION_MESSAGE) String exceptionMessage) {
+        
+        logger.info("=== DEAD LETTER TOPIC HANDLER (@DltHandler) ===");
+        logger.info("Received failed message in DLT from topic: {}", topic);
+        logger.info("Original message: {}", message);
+        logger.info("Failure reason: {}", exceptionMessage);
+        
+        // Training: Handle DLT message - log, alert, store for manual review
+        handleDeadLetterMessage(message, exceptionMessage);
     }
     
     // ==================== ASYNC KAFKA LISTENER ====================

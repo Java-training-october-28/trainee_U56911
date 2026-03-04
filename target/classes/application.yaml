@@ -71,19 +71,51 @@ app:
     lockout:
       duration: 900  # 15 minutes in seconds
 
-  # Kafka Configuration
+  # Kafka Configuration - Spring Boot Auto-configuration
   kafka:
     bootstrap-servers: localhost:9092
+    
+    # Producer Configuration
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all                              # Wait for all replicas
+      retries: 3                             # Retry 3 times
+      retry-backoff-ms: 100                  # 100ms backoff
+      enable-idempotence: true               # Idempotent producer
+      compression-type: snappy                # Snappy compression
+      batch-size: 16384                       # 16KB batch
+      linger-ms: 5                            # Wait 5ms for batching
+      buffer-memory: 33554432                 # 32MB buffer
+      max-block-ms: 60000                     # 60s max block
+      delivery-timeout-ms: 120000             # 120s delivery timeout
+    
+    # Consumer Configuration
     consumer:
       group-id: task-management-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    properties:
-      spring.json.trusted.packages: "*"
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      enable-auto-commit: false               # Manual commit
+      max-poll-records: 500                   # 500 records per poll
+      max-poll-interval-ms: 300000            # 5 minute timeout
+      session-timeout-ms: 10000               # 10 second session
+      heartbeat-interval-ms: 3000             # 3 second heartbeat
+      fetch-min-bytes: 1                      # Min bytes to fetch
+      fetch-max-wait-ms: 500                  # Max wait time
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: "com.example.demo.dto.KafkaTaskMessageDTO"
+    
+    # Listener Configuration
+    listener:
+      ack-mode: manual_immediate              # Manual acknowledgment
+      poll-timeout: 3000                       # 3 second poll timeout
+      concurrency: 3                           # 3 concurrent consumers
+    
+    # Admin Configuration
+    admin:
+      fail-fast: true
 
   # Spring Cloud Stream Configuration
   cloud:
