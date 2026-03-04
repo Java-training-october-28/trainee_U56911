@@ -664,36 +664,7 @@ public class EnhancedKafkaProducerService {
     // To use the Outbox Pattern, inject these in your service:
     // private final OutboxRepository outboxRepository;
     // private final ObjectMapper objectMapper;
-    
-    /**
-     * Example: Using Outbox Pattern for reliable DB + Kafka
-     * 
-     * In your service, save to DB and outbox in SAME transaction:
-     */ 
-      @Transactional
-      public void createTaskWithOutbox(Task task) {
-          // Step 1: Save main entity to DB
-          Task saved = taskRepository.save(task);
-          
-          // Step 2: Create Kafka event payload
-          KafkaTaskMessageDTO event = new KafkaTaskMessageDTO(
-              "TASK_CREATED", saved.getId(), saved.getTitle(), 
-              saved.getStatus(), userId, username
-          );
-          
-          // Step 3: Save to outbox table (SAME transaction!)
-          OutboxMessage outbox = new OutboxMessage(
-              "Task",
-              saved.getId().toString(),
-              "TASK_CREATED",
-              objectMapper.writeValueAsString(event)
-         );
-          outboxRepository.save(outbox);
-          
-          // Both save() calls are in same transaction!
-          // When transaction commits, both are persisted
-     }
-
+  
      /* 
      * 
      * Step 4: OutboxScheduler automatically:
