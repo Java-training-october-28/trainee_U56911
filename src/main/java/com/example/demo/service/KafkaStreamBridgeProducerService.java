@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
  * Service for producing Kafka messages using Spring Cloud Stream
  */
 @Service
-public class KafkaMessageProducerService {
+public class KafkaStreamBridgeProducerService {
     
-    private static final Logger logger = LoggerFactory.getLogger(KafkaMessageProducerService.class);
+    private static final Logger logger = LoggerFactory.getLogger(KafkaStreamBridgeProducerService.class);
     
     private final StreamBridge streamBridge;
     

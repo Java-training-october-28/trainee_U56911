@@ -15,10 +15,14 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 /**
  * Enhanced Kafka Consumer Service for Training Purposes
@@ -34,6 +38,32 @@ public class EnhancedKafkaConsumerService {
     
     private static final Logger logger = LoggerFactory.getLogger(EnhancedKafkaConsumerService.class);
     private final ExecutorService asyncExecutor = Executors.newFixedThreadPool(5);
+
+    // In-memory store of received messages (last 500)
+    private final CopyOnWriteArrayList<KafkaTaskMessageDTO> receivedMessages = new CopyOnWriteArrayList<>();
+    private static final int MAX_STORED_MESSAGES = 500;
+
+    public List<KafkaTaskMessageDTO> searchMessages(String keyword) {
+        String lower = keyword == null ? "" : keyword.toLowerCase();
+        return receivedMessages.stream()
+            .filter(m -> lower.isEmpty()
+                || (m.getTaskTitle() != null && m.getTaskTitle().toLowerCase().contains(lower))
+                || (m.getEventType() != null && m.getEventType().toLowerCase().contains(lower))
+                || (m.getUserName() != null && m.getUserName().toLowerCase().contains(lower))
+                || (m.getMessageId() != null && m.getMessageId().toLowerCase().contains(lower)))
+            .collect(Collectors.toList());
+    }
+
+    public List<KafkaTaskMessageDTO> getAllMessages() {
+        return Collections.unmodifiableList(new ArrayList<>(receivedMessages));
+    }
+
+    private void storeMessage(KafkaTaskMessageDTO message) {
+        if (receivedMessages.size() >= MAX_STORED_MESSAGES) {
+            receivedMessages.remove(0);
+        }
+        receivedMessages.add(message);
+    }
     
     // ==================== RETRYABLE TOPIC LISTENER (Annotation-based DLQ) ====================
     
@@ -69,6 +99,8 @@ public class EnhancedKafkaConsumerService {
         logger.info("Message timestamp: {}, payload: {}", timestamp, message);
         
         try {
+            // Store message for search
+            storeMessage(message);
             // Training: Process message with business logic
             processMessageWithRetryLogic(message);
             

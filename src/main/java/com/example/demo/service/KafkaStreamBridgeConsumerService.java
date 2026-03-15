@@ -12,9 +12,9 @@ import java.util.function.Consumer;
  * Service for consuming Kafka messages using Spring Cloud Stream Function
  */
 @Service
-public class KafkaMessageConsumerService {
+public class KafkaStreamBridgeConsumerService {
     
-    private static final Logger logger = LoggerFactory.getLogger(KafkaMessageConsumerService.class);
+    private static final Logger logger = LoggerFactory.getLogger(KafkaStreamBridgeConsumerService.class);
     
     /**
      * Consumer function for processing task events from Kafka

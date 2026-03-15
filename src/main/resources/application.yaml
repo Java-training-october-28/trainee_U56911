@@ -73,7 +73,7 @@ app:
 
   # Kafka Configuration - Spring Boot Auto-configuration
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: 13.218.101.66:9092
     
     # Producer Configuration
     producer:
