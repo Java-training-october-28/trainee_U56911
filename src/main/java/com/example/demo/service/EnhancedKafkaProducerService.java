@@ -97,7 +97,7 @@ public class EnhancedKafkaProducerService {
         logger.info("Sending message asynchronously to topic: {}", topic);
         
         CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, message)
-                .completable()
+                .thenApply(result -> result)
                 .whenComplete((result, throwable) -> {
                     if (throwable != null) {
                         logger.error("Failed to send message asynchronously", throwable);
@@ -687,7 +687,7 @@ public class EnhancedKafkaProducerService {
             "TASK_CREATED",
             saved.getId(),
             saved.getTitle(),
-            saved.getStatus(),
+            saved.getStatus() != null ? saved.getStatus().name() : "TODO",
             userId,
             userName
         );

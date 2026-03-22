@@ -1,6 +1,5 @@
 package com.example.demo.config;
 
-import com.example.demo.saga.Envelope;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -8,10 +7,12 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
@@ -32,6 +33,15 @@ public class KafkaConfig {
 
     @Value("${spring.kafka.bootstrap-servers:localhost:9092}")
     private String bootstrapServers;
+
+    /**
+     * Kafka Properties Bean - needed by other Kafka configurations
+     * since KafkaAutoConfiguration is excluded
+     */
+    @Bean
+    public KafkaProperties kafkaProperties() {
+        return new KafkaProperties();
+    }
 
     /**
      * Transactional Producer Factory
@@ -66,59 +76,53 @@ public class KafkaConfig {
         
         return new DefaultKafkaProducerFactory<>(props);
     }
-    
-    /**
-     * Kafka Transaction Manager
-     * 
-     * Manages Kafka transactions independently.
-     * Used when you need Kafka-only transactions or as part of ChainedKafkaTransactionManager.
-     * 
-     * Key points:
-     * - Starts a transaction before any Kafka operation
-     * - Commits transaction when method completes successfully
-     * - Rolls back transaction if any exception occurs
-     */
-    @Bean
-    public KafkaTransactionManager<String, Object> kafkaTransactionManager(
-            ProducerFactory<String, Object> producerFactory) {
-        return new KafkaTransactionManager<>(producerFactory);
-    }
-    
-    /**
-     * Chained Transaction Manager (Database + Kafka)
-     * 
-     * This is the KEY IMPLEMENTATION for distributed transactions!
-     * 
-     * How it works:
-     * 1. Begins DB transaction first
-     * 2. Begins Kafka transaction second
-     * 3. When method succeeds: commits Kafka first, then DB
-     * 4. When method fails: rolls back both (in reverse order)
-     * 
-     * CRITICAL: If Kafka commit fails after DB commit, 
-     * ChainedKafkaTransactionManager will mark for rollback.
-     * 
-     * @param dbTxManager - The JPA/Database transaction manager (auto-configured by Spring Boot)
-     * @param kafkaTxManager - Our Kafka transaction manager
-     * @return Chained transaction manager that handles both DB and Kafka
-     */
-    @Bean
-    public ChainedKafkaTransactionManager<String, Object> chainedTransactionManager(
-            JpaTransactionManager dbTxManager,
-            KafkaTransactionManager<String, Object> kafkaTxManager) {
-        // Order matters! Kafka first, then DB
-        // This ensures Kafka messages are sent before DB commits
-        return new ChainedKafkaTransactionManager<>(kafkaTxManager, dbTxManager);
-    }
 
+    /**
+     * String-based Producer Factory for OutboxScheduler
+     */
     @Bean
+    public ProducerFactory<String, String> stringProducerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "demo-string-producer");
+        props.put(ProducerConfig.ACKS_CONFIG, "all");
+        props.put(ProducerConfig.RETRIES_CONFIG, 3);
+        props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
+        
+        return new DefaultKafkaProducerFactory<>(props);
+    }
+    
+    /**
+     * Transaction Manager - uses simple JPA transaction by default
+     * This allows the application to start without Kafka
+     * For Kafka transactions, use KafkaTransactionManager explicitly in your services
+     */
+    @Bean
+    @Primary
+    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        // Use simple JPA transaction manager to allow startup without Kafka
+        // For distributed transactions with Kafka, inject KafkaTransactionManager explicitly
+        return new JpaTransactionManager(entityManagerFactory);
+    }
+    @Bean
+    @Primary
     public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
+    /**
+     * String-based KafkaTemplate for OutboxScheduler
+     */
     @Bean
-    public ConsumerFactory<String, Envelope> consumerFactory() {
-        JsonDeserializer<Envelope> deserializer = new JsonDeserializer<>(Envelope.class);
+    public KafkaTemplate<String, String> stringKafkaTemplate() {
+        return new KafkaTemplate<>(stringProducerFactory());
+    }
+
+    @Bean
+    public ConsumerFactory<String, Object> consumerFactory() {
+        JsonDeserializer<Object> deserializer = new JsonDeserializer<>(Object.class);
         deserializer.addTrustedPackages("*");
 
         Map<String, Object> props = new HashMap<>();
@@ -131,11 +135,10 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Envelope> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Envelope> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.setConcurrency(4);
-        factory.getContainers().forEach(container -> container.setPollTimeout(3000));
         return factory;
     }
 }

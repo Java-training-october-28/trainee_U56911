@@ -1,101 +1,107 @@
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\exception\AccessDeniedException.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\UserUpdateDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\TaskServiceInterface.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\BatchProcessingService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\CloudIntegrationController.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\health\CacheHealthIndicator.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\JwtAuthenticationFilter.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\auth\AuthRefreshDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\auth\AuthRegisterDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\MetricsConfig.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\KafkaConfig.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\KafkaDemoController.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\User.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\CommentCreateDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\response\ErrorResponse.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\repository\RefreshTokenRepository.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\VirtualThreadExecutorDemoService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\CircuitBreakerDemoService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\VirtualThreadService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\repository\TaskRepository.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\TaskStatus.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\UserCreateDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\auth\AuthLogoutDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\exception\BaseException.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\Priority.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\auth\AuthValidationDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\ProjectService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\mapper\CommentMapper.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\SecurityConfig.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\health\DatabaseHealthIndicator.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\UserServiceInterface.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\TaskController.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\TaskNotification.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\KafkaMessageProducerService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\ProjectController.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\UserController.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\TaskDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\auth\AuthResponseDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\DataValidation.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\UserDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\ProjectUpdateDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\StructuredConcurrencyService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\mapper\ProjectMapper.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\NotificationClientService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\NotificationPriority.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\exception\BusinessException.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\RefreshToken.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\TaskCreateDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\TaskPriority.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\TaskService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\mapper\UserMapper.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\DashboardController.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\AuthService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\CloudConfig.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\CircuitBreakerDemoController.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\exception\handler\GlobalExceptionHandler.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\KafkaTaskMessageDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\ProjectDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\mapper\TaskMapper.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\DataExportImport.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\JwtService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\repository\ProjectRepository.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\ProjectServiceInterface.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\ConcurrencyController.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\NotificationService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\ProjectNotification.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\auth\AuthLoginDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\DemoApplication.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\TaskUpdateDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\Comment.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\LoggingConfig.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\TemplateController.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\Project.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\DatabaseTokenStoreService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\SystemNotification.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\UserService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\exception\ResourceAlreadyExistsException.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\repository\UserRepository.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\exception\ValidationException.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\Role.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\RootController.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\StringTemplateService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\repository\CommentRepository.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\ProjectCreateDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\ProjectStatus.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\TokenStoreConfig.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\KafkaMessageConsumerService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\response\ApiResponse.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\sequenced\SequencedCollectionsDemo.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\NotificationType.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\Task.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\response\ValidationErrorDetail.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\CommentService.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\NotificationController.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\AuthController.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\SwaggerConfig.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\CommentDTO.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\DatabaseIndexConfig.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\CommentController.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\DataLoader.java
-S:\Self-Study\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\exception\ResourceNotFoundException.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\NotificationClientService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\TaskController.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\TaskDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\JwtAuthenticationFilter.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\OutboxMessage.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\VirtualThreadService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\mapper\UserMapper.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\LoggingConfig.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\exception\ValidationException.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\OutboxScheduler.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\Role.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\CommentController.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\auth\AuthResponseDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\ProjectCreateDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\exception\ResourceAlreadyExistsException.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\health\DatabaseHealthIndicator.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\health\CacheHealthIndicator.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\SystemNotification.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\CommentService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\EnhancedKafkaConfig.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\CloudIntegrationController.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\TemplateController.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\ProjectServiceInterface.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\CircuitBreakerDemoService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\repository\TaskRepository.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\DatabaseIndexConfig.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\CustomUserDetailsService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\NotificationPriority.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\TaskNotification.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\auth\AuthLoginDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\ConcurrencyController.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\StructuredConcurrencyService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\TaskServiceInterface.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\KafkaTrainingController.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\exception\AccessDeniedException.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\UserService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\VirtualThreadExecutorDemoService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\UserController.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\ProjectNotification.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\exception\handler\GlobalExceptionHandler.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\StringTemplateService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\CommentCreateDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\UserDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\mapper\ProjectMapper.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\BatchProcessingService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\repository\CommentRepository.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\ProjectUpdateDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\JwtService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\NotificationService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\DashboardController.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\exception\ResourceNotFoundException.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\NotificationController.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\MetricsConfig.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\mapper\CommentMapper.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\ProjectDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\UserCreateDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\repository\ProjectRepository.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\TaskService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\TokenStoreConfig.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\exception\BusinessException.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\UserServiceInterface.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\Priority.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\DemoApplication.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\repository\UserRepository.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\TaskStatus.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\KafkaTaskMessageDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\DataLoader.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\Comment.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\TaskPriority.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\auth\AuthRegisterDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\exception\BaseException.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\EnhancedKafkaProducerService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\KafkaConfig.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\UserUpdateDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\TaskCreateDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\User.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\CircuitBreakerDemoController.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\repository\RefreshTokenRepository.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\auth\AuthRefreshDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\OutboxService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\auth\AuthLogoutDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\TaskUpdateDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\CommentDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\ProjectStatus.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\CloudConfig.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\DataExportImport.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\Task.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\DatabaseTokenStoreService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\Project.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\DataValidation.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\response\ErrorResponse.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\RefreshToken.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\auth\AuthValidationDTO.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\ProjectController.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\SwaggerConfig.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\EnhancedKafkaConsumerService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\response\ApiResponse.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\entity\NotificationType.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\RootController.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\dto\response\ValidationErrorDetail.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\sequenced\SequencedCollectionsDemo.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\mapper\TaskMapper.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\ProjectService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\repository\OutboxRepository.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\service\AuthService.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\controller\AuthController.java
+S:\Nikola Tesla\Spring\UST Spring Tutor\UST-Git\trainee_U56911\src\main\java\com\example\demo\config\SecurityConfig.java

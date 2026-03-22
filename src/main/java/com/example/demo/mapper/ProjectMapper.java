@@ -6,7 +6,7 @@ import org.mapstruct.*;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class})
+@Mapper(componentModel = "spring", uses = {UserMapper.class, TaskMapper.class})
 public interface ProjectMapper {
     
     @Named("basicProjectDTO")
@@ -15,7 +15,7 @@ public interface ProjectMapper {
     ProjectDTO toDTO(Project project);
 
     @Named("projectDTOWithTasks")
-     @Mapping(target = "tasks", qualifiedByName = "basicTaskDTOList")
+    @Mapping(target = "tasks", ignore = true)
     ProjectDTO toDTOWithTasks(Project project);
     
     @Mapping(target = "id", ignore = true)

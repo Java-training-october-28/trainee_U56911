@@ -16,7 +16,7 @@ public class KafkaStreamBridgeProducerService {
     
     private final StreamBridge streamBridge;
     
-    public KafkaMessageProducerService(StreamBridge streamBridge) {
+    public KafkaStreamBridgeProducerService(StreamBridge streamBridge) {
         this.streamBridge = streamBridge;
     }
     

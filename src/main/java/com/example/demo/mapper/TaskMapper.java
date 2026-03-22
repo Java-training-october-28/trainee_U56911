@@ -52,13 +52,6 @@ public interface TaskMapper {
     @Mapping(target = "priority", source = "priority", qualifiedByName = "priorityToString")
     TaskDTO toDTO(Task task);
 
-      @Named("basicTaskDTOList")
-    @Mapping(target = "comments", ignore = true)
-    @Mapping(target = "project", ignore = true)
-    @Mapping(target = "assignee", ignore = true)
-    @Mapping(target = "priority", ignore = true)
-    TaskDTO toDTO(Task task);
-
     @Named("taskDTOWithComments")
     @Mapping(target = "comments", ignore = true)
     @Mapping(target = "project", qualifiedByName = "basicProjectDTO")

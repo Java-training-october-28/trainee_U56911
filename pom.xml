@@ -267,7 +267,8 @@
             <version>2.1.0</version>
         </dependency>
         
-        <!-- Spring Cloud Stream with Kafka Binder -->
+        <!-- Spring Cloud Stream with Kafka Binder - commented out for local development -->
+        <!-- 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-stream</artifactId>
@@ -277,6 +278,7 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-stream-binder-kafka</artifactId>
         </dependency>
+        -->
         
         <!-- Kafka dependencies -->
         <dependency>

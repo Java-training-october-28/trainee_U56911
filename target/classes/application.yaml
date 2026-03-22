@@ -6,9 +6,9 @@ spring:
     name: task-management-service
   cloud:
     config:
-      enabled: true
-      uri: http://localhost:8888
-      fail-fast: true
+      enabled: false
+      import-check:
+        enabled: false
       retry:
         initial-interval: 1000
         max-attempts: 6
@@ -39,18 +39,14 @@ spring:
         jdbc.batch_versioned_data: true
         # Query optimization
         query.in_clause_parameter_padding: true
-        # Enable second-level cache with Ehcache as provider
-        cache.use_second_level_cache: true
-        cache.use_query_cache: true
-        cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
-        generate_statistics: true
+        # Second-level cache disabled due to Java 21 compatibility
+        cache.use_second_level_cache: false
+        generate_statistics: false
     open-in-view: false
   
-  # Cache configuration - Ehcache (enabled with JAXB runtime added)
+  # Cache configuration - disabled due to Java 21 compatibility
   cache:
-    type: jcache
-    jcache:
-      config: classpath:ehcache.xml
+    type: simple
   
 # Token storage configuration - using database only
 app:
@@ -71,7 +67,7 @@ app:
     lockout:
       duration: 900  # 15 minutes in seconds
 
-  # Kafka Configuration - Spring Boot Auto-configuration
+  # Kafka Configuration - using AWS MSK
   kafka:
     bootstrap-servers: 54.234.105.244:9092
     
@@ -115,36 +111,25 @@ app:
     
     # Admin Configuration
     admin:
-      fail-fast: true
+      fail-fast: false
 
-  # Spring Cloud Stream Configuration
+  # Retry Topic Configuration - disabled
+  retry:
+    topic:
+      enabled: false
+
+  # Spring Cloud Stream Configuration - disabled for now
   cloud:
     stream:
-      bindings:
-        taskOutput: # Producer channel
-          destination: task-events
-          content-type: application/json
-          group: task-management-group
-        taskInput: # Consumer channel  
-          destination: task-events
-          content-type: application/json
-          group: task-management-group
-      kafka:
-        binder:
-          brokers: localhost:9092
-          auto-create-topics: true
-          replication-factor: 1
+      enabled: false
 
 server:
   port: 8080
 
-# Eureka Client Configuration
+# Eureka Client Configuration - disabled for local development
 eureka:
   client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-    fetch-registry: true
-    register-with-eureka: true
+    enabled: false
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${server.port}
